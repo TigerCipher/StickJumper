@@ -15,25 +15,38 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: main.cpp
-// Date File Created: 05/11/2021 at 3:59 PM
+// File Name: Display.h
+// Date File Created: 05/11/2021 at 4:19 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
+#pragma once
 
-#include "Display.h"
+#include <string>
+#include "Common.h"
 
-int main(int argc, char** argv)
+class Display
 {
-	Display disp("Stick Jumper", 1280, 720);
+public:
+	Display(const std::string& title, int width, int height);
+	~Display();
 
-	while(!disp.isClosed())
-	{
-		disp.clear(0.2f);
+	void swap() const;
+	void clear(float red = 0, float green = 0, float blue = 0);
 
-		
-		disp.swap();
-	}
-	return 0;
-}
+	bool isClosed() const;
+
+	int getWidth() const { return mWidth; }
+	int getHeight() const { return mHeight; }
+	vec2f getCenter() const;
+	vec2f getWhVector() const;
+
+	static constexpr int VSYNC = 0;
+
+private:
+	class GLFWwindow* mWindow;
+	int mWidth;
+	int mHeight;
+	std::string mTitle{};
+};
