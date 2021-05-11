@@ -26,6 +26,8 @@
 
 int main(int argc, char** argv)
 {
+	Log::init();
+	
 	Display disp("Stick Jumper", 1280, 720);
 
 	while(!disp.isClosed())
@@ -35,5 +37,7 @@ int main(int argc, char** argv)
 		
 		disp.swap();
 	}
+
+	LOG_INFO("Application exiting");
 	return 0;
 }

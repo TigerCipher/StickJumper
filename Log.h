@@ -15,38 +15,38 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: Display.h
-// Date File Created: 05/11/2021 at 4:19 PM
+// File Name: Log.h
+// Date File Created: 05/11/2021 at 5:46 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include <string>
-#include "Common.h"
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-class Display
+#ifdef _DEBUG
+	#define SPDLOG_DEBUG_ON
+	#define SPDLOG_TRACE_ON
+#endif
+
+
+#include <spdlog/spdlog.h>
+
+#include <memory>
+
+class Log
 {
 public:
-	Display(const std::string& title, int width, int height);
-	~Display();
-
-	void swap() const;
-	void clear(float red = 0, float green = 0, float blue = 0);
-
-	bool isClosed() const;
-
-	int getWidth() const { return mWidth; }
-	int getHeight() const { return mHeight; }
-	vec2f getCenter() const;
-	vec2f getWhVector() const;
-
-	static constexpr int VSYNC = 0;
-
+	static void init();
+	static std::shared_ptr<spdlog::logger>& getLogger() { return sLogger; }
 private:
-	struct GLFWwindow* mWindow;
-	int mWidth;
-	int mHeight;
-	std::string mTitle{};
+	static std::shared_ptr<spdlog::logger> sLogger;
 };
+
+#define LOG_TRACE(...)       SPDLOG_LOGGER_TRACE(Log::getLogger(), __VA_ARGS__)
+#define LOG_DEBUG(...)       SPDLOG_LOGGER_DEBUG(Log::getLogger(), __VA_ARGS__)
+#define LOG_INFO(...)        SPDLOG_LOGGER_INFO(Log::getLogger(), __VA_ARGS__)
+#define LOG_WARN(...)        SPDLOG_LOGGER_WARN(Log::getLogger(), __VA_ARGS__)
+#define LOG_ERROR(...)       SPDLOG_LOGGER_ERROR(Log::getLogger(), __VA_ARGS__)
+#define LOG_CRITICAL(...)    SPDLOG_LOGGER_CRITICAL(Log::getLogger(), __VA_ARGS__)

@@ -37,26 +37,30 @@ Display::Display(const std::string& title, const int width, const int height) :
 	mHeight(height),
 	mTitle(title)
 {
+	LOG_TRACE("Initializing glfw");
 	if (!glfwInit())
 	{
-		fmt::print("Failed to initialize glfw");
+		LOG_CRITICAL("Failed to initialize glfw");
 		exit(-1);
 	}
 
 	glfwSetErrorCallback(glfw_error_callback);
 
+	LOG_TRACE("Creating window with resolution ({}, {})", width, height);
 	mWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
 	if (!mWindow)
 	{
-		fmt::print("Failed to create window");
+		LOG_CRITICAL("Failed to create window");
 		exit(-1);
 	}
+	LOG_TRACE("Window has been created successfully");
+	
 	const auto centerX = (glfwGetVideoMode(glfwGetPrimaryMonitor())->width / 2) - (width / 2);
 	const auto centerY = (glfwGetVideoMode(glfwGetPrimaryMonitor())->height / 2) - (height / 2);
 	glfwSetWindowPos(mWindow, centerX, centerY);
 
-
+	LOG_TRACE("Creating OpenGL context");
 	glfwMakeContextCurrent(mWindow);
 
 	glfwSwapInterval(VSYNC);
@@ -64,18 +68,22 @@ Display::Display(const std::string& title, const int width, const int height) :
 	int w, h;
 	glfwGetFramebufferSize(mWindow, &w, &h);
 
-
+	LOG_TRACE("Initializing GLEW");
 	const auto init = glewInit();
 	if (init)
 	{
-		fmt::print("Failed to initialize glew - {}", glewGetErrorString(init));
+		LOG_CRITICAL("Failed to initialize glew - {}", glewGetErrorString(init));
 		exit(-1);
 	}
+	
 	glViewport(0, 0, w, h);
+
+	LOG_INFO("Display is initialized");
 }
 
 Display::~Display()
 {
+	LOG_INFO("Destroying display");
 	glfwDestroyWindow(mWindow);
 	glfwTerminate();
 }

@@ -39,6 +39,8 @@ typedef unsigned char ubyte;
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
 
+#include "Log.h"
+
 using vec2f = glm::vec2;
 using vec3f = glm::vec3;
 using vec4f = glm::vec4;

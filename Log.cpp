@@ -15,38 +15,31 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: Display.h
-// Date File Created: 05/11/2021 at 4:19 PM
+// File Name: Log.cpp
+// Date File Created: 05/11/2021 at 5:48 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-#pragma once
+#include "Log.h"
+#include <vector>
 
-#include <string>
-#include "Common.h"
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
-class Display
+std::shared_ptr<spdlog::logger> Log::sLogger;
+
+void Log::init()
 {
-public:
-	Display(const std::string& title, int width, int height);
-	~Display();
+	std::vector<spdlog::sink_ptr> logSinks;
+	logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("info.log", true));
+	logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
 
-	void swap() const;
-	void clear(float red = 0, float green = 0, float blue = 0);
+	logSinks[0]->set_pattern("[%m-%d-%Y %H:%M:%S] [%l] [%g:%#] [%!] %n: %v");
+	logSinks[1]->set_pattern("%^[%T] [%l] %n: %v%$");
 
-	bool isClosed() const;
-
-	int getWidth() const { return mWidth; }
-	int getHeight() const { return mHeight; }
-	vec2f getCenter() const;
-	vec2f getWhVector() const;
-
-	static constexpr int VSYNC = 0;
-
-private:
-	struct GLFWwindow* mWindow;
-	int mWidth;
-	int mHeight;
-	std::string mTitle{};
-};
+	sLogger = std::make_shared<spdlog::logger>("StickJumper", begin(logSinks), end(logSinks));
+	spdlog::register_logger(sLogger);
+	sLogger->set_level(spdlog::level::trace);
+	sLogger->flush_on(spdlog::level::trace);
+}
