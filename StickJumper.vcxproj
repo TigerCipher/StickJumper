@@ -146,6 +146,8 @@
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -155,6 +157,8 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
