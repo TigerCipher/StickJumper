@@ -23,6 +23,16 @@
 
 #pragma once
 
+#if defined(_WIN32) || defined(_WIN64)
+	#define OS_WINDOWS
+#elif defined(macintosh) || defined(Macintosh) || defined(__APPLE__) || defined(__MACH__)
+	#define OS_APPLE
+#elif defined(__unix__) || defined(__unix) || defined(__linux__) || defined(linux) || defined(__linux)
+	#define OS_UNIX
+#else
+	#define OS_OTHER
+#endif
+
 #define STR(x) #x
 #define STR_EXPANDED(x) STR(x)
 

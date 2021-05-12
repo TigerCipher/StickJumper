@@ -15,46 +15,43 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: main.cpp
-// Date File Created: 05/11/2021 at 3:59 PM
+// File Name: MsgBox.h
+// Date File Created: 05/12/2021 at 12:27 AM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
+#pragma once
 
-#include "Display.h"
-#include "BufferObject.h"
-#include "Shader.h"
-#include "MsgBox.h"
-
-list<float> gVertices = {
-	-0.5f, -0.5f,
-	 0.5f, -0.5f,
-	 0.0f,  0.5f
-};
-
-int main(int argc, char** argv)
+class MsgBox
 {
-	Log::init();
-	
-	Display disp("Stick Jumper", 1280, 720);
-	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
-
-	BufferObject obj(gVertices);
-	
-	while(!disp.isClosed())
+public:
+	enum Styles
 	{
-		disp.clear(0.2f);
+		STYLE_INFO,
+		STYLE_WARNING,
+		STYLE_ERROR,
+		STYLE_QUESTION
+	};
 
-		basic.bind();
-		//obj.bind();
-		obj.draw();
-		
-		disp.swap();
-	}
+	enum Buttons
+	{
+		BUTTON_OK,
+		BUTTON_OK_CANCEL,
+		BUTTON_YES_NO,
+		BUTTON_QUIT
+	};
 
-	LOG_INFO("Application exiting");
+	enum Response
+	{
+		RESP_OK,
+		RESP_CANCEL,
+		RESP_YES,
+		RESP_NO,
+		RESP_QUIT,
+		RESP_NONE
+	};
 
-	MsgBox::show("Test MsgBox", "This is just a test", MsgBox::STYLE_INFO);
-	return 0;
-}
+	static Response show(const char* title, const char* msg,
+		Styles style = STYLE_INFO, Buttons button = BUTTON_OK);
+};
