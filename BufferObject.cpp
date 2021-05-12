@@ -15,43 +15,45 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: main.cpp
-// Date File Created: 05/11/2021 at 3:59 PM
+// File Name: BufferObject.cpp
+// Date File Created: 05/11/2021 at 11:32 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-
-#include "Display.h"
 #include "BufferObject.h"
-#include "Shader.h"
 
-list<float> gVertices = {
-	-0.5f, -0.5f,
-	 0.5f, -0.5f,
-	 0.0f,  0.5f
-};
+#include <gl/glew.h>
 
-int main(int argc, char** argv)
+BufferObject::BufferObject(list<float> verts):
+	mVertices(std::move(verts))
 {
-	Log::init();
-	
-	Display disp("Stick Jumper", 1280, 720);
-	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
+	glGenBuffers(1, &mVbo);
+	glGenVertexArrays(1, &mVao);
 
-	BufferObject obj(gVertices);
-	
-	while(!disp.isClosed())
-	{
-		disp.clear(0.2f);
+	glBindVertexArray(mVao);
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 
-		basic.bind();
-		//obj.bind();
-		obj.draw();
-		
-		disp.swap();
-	}
+	glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(float), mVertices.data(), GL_STATIC_DRAW);
 
-	LOG_INFO("Application exiting");
-	return 0;
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), static_cast<void*>(nullptr));
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void BufferObject::bind()
+{
+	glBindVertexArray(mVao);
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+}
+
+void BufferObject::draw()
+{
+	glBindVertexArray(mVao);
+	//glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

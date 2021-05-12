@@ -33,6 +33,9 @@
     <ClCompile Include="Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BufferObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore">
@@ -40,6 +43,12 @@
     </None>
     <None Include="README.md">
       <Filter>Misc</Filter>
+    </None>
+    <None Include="assets\shaders\testVS.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\testFS.glsl">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +65,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

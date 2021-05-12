@@ -15,43 +15,26 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: main.cpp
-// Date File Created: 05/11/2021 at 3:59 PM
+// File Name: BufferObject.h
+// Date File Created: 05/11/2021 at 11:32 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
+#pragma once
 
-#include "Display.h"
-#include "BufferObject.h"
-#include "Shader.h"
+#include "Common.h"
 
-list<float> gVertices = {
-	-0.5f, -0.5f,
-	 0.5f, -0.5f,
-	 0.0f,  0.5f
-};
-
-int main(int argc, char** argv)
+class BufferObject
 {
-	Log::init();
+public:
+	BufferObject(list<float> verts);
+
+	void bind();
+	void draw();
+private:
+	uint mVbo;
+	uint mVao;
+	list<float> mVertices;
 	
-	Display disp("Stick Jumper", 1280, 720);
-	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
-
-	BufferObject obj(gVertices);
-	
-	while(!disp.isClosed())
-	{
-		disp.clear(0.2f);
-
-		basic.bind();
-		//obj.bind();
-		obj.draw();
-		
-		disp.swap();
-	}
-
-	LOG_INFO("Application exiting");
-	return 0;
-}
+};

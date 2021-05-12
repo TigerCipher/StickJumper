@@ -29,8 +29,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(std::string vert, std::string frag) :
-mVertPath(std::move(vert)),
-mFragPath(std::move(frag))
+	mVertPath(std::move(vert)),
+	mFragPath(std::move(frag))
 {
 	load();
 }
@@ -87,11 +87,12 @@ void Shader::load()
 	std::string vertSrcStr;
 	std::string fragSrcStr;
 
-	if(!read_file(mVertPath, vertSrcStr))
+	if (!read_file(mVertPath, vertSrcStr))
 	{
 		LOG_CRITICAL("Failed to load shader {}", mVertPath);
 		exit(-1);
 	}
+
 
 	if (!read_file(mFragPath, fragSrcStr))
 	{
@@ -107,7 +108,7 @@ void Shader::load()
 	glCompileShader(vertShader);
 
 	int success;
-	char info[512];
+	char info[ 512 ];
 	glGetShaderiv(vertShader, GL_COMPILE_STATUS, &success);
 
 	if (!success)
@@ -150,5 +151,12 @@ void Shader::load()
 	LOG_INFO("Shader [id={}] loaded from files [{}] and [{}]", mProgram, mVertPath, mFragPath);
 }
 
-int Shader::getUniformLocation(const std::string& name) const {}
-int Shader::getAttributeLocation(const std::string& name) const {}
+int Shader::getUniformLocation(const std::string& name) const
+{
+	return glGetUniformLocation(mProgram, name.c_str());
+}
+
+int Shader::getAttributeLocation(const std::string& name) const
+{
+	return glGetAttribLocation(mProgram, name.c_str());
+}

@@ -46,6 +46,10 @@ Display::Display(const std::string& title, const int width, const int height) :
 
 	glfwSetErrorCallback(glfw_error_callback);
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	LOG_TRACE("Creating window with resolution ({}, {})", width, height);
 	mWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
@@ -76,7 +80,7 @@ Display::Display(const std::string& title, const int width, const int height) :
 		exit(-1);
 	}
 	
-	glViewport(0, 0, w, h);
+	//glViewport(0, 0, w, h);
 
 	LOG_INFO("Display is initialized");
 }
