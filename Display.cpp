@@ -22,6 +22,7 @@
 // ------------------------------------------------------------------------------
 
 #include "Display.h"
+#include "Error.h"
 
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
@@ -40,23 +41,21 @@ Display::Display(const std::string& title, const int width, const int height) :
 	LOG_TRACE("Initializing glfw");
 	if (!glfwInit())
 	{
-		LOG_CRITICAL("Failed to initialize glfw");
-		exit(-1);
+		throw DISPLAY_ERROR("Failed to initialize glfw");
 	}
 
 	glfwSetErrorCallback(glfw_error_callback);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	LOG_TRACE("Creating window with resolution ({}, {})", width, height);
 	mWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
 	if (!mWindow)
 	{
-		LOG_CRITICAL("Failed to create window");
-		exit(-1);
+		throw DISPLAY_ERROR("Failed to create window");
 	}
 	LOG_TRACE("Window has been created successfully");
 	
@@ -76,12 +75,19 @@ Display::Display(const std::string& title, const int width, const int height) :
 	const auto init = glewInit();
 	if (init)
 	{
-		LOG_CRITICAL("Failed to initialize glew - {}", glewGetErrorString(init));
-		exit(-1);
+		throw DISPLAY_ERROR("Failed to initialize glew - {}", glewGetErrorString(init));
 	}
 	
 	//glViewport(0, 0, w, h);
 
+	LOG_TRACE("OpenGL Vendor: {}", glGetString(GL_VENDOR));
+	LOG_TRACE("OpenGL Renderer: {}", glGetString(GL_RENDERER));
+	int major, minor;
+	glGetIntegerv(GL_MAJOR_VERSION, &major);
+	glGetIntegerv(GL_MINOR_VERSION, &minor);
+	LOG_TRACE("OpenGL Version {}.{}", major, minor);
+	LOG_TRACE("GLSL Version {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	LOG_DEBUG("GLSL Extensions: {}", glGetString(GL_EXTENSIONS));
 	LOG_INFO("Display is initialized");
 }
 

@@ -24,6 +24,7 @@
 
 #include "Display.h"
 #include "BufferObject.h"
+#include "Error.h"
 #include "Shader.h"
 #include "MsgBox.h"
 
@@ -33,28 +34,50 @@ list<float> gVertices = {
 	 0.0f,  0.5f
 };
 
-int main(int argc, char** argv)
+void run()
 {
-	Log::init();
-	
 	Display disp("Stick Jumper", 1280, 720);
 	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
 	BufferObject obj(gVertices);
-	
-	while(!disp.isClosed())
+
+	while (!disp.isClosed())
 	{
 		disp.clear(0.2f);
 
 		basic.bind();
 		//obj.bind();
 		obj.draw();
-		
+
 		disp.swap();
+	}
+}
+
+int main(int argc, char** argv)
+{
+	Log::init();
+	
+	try
+	{
+		run();
+	}catch(const Error& e)
+	{
+		LOG_CRITICAL(e.what());
+		MsgBox::show(e.getType(), e.what(), MsgBox::STYLE_ERROR);
+		return -1;
+	}catch(const std::exception& e)
+	{
+		LOG_CRITICAL(e.what());
+		MsgBox::show("STD Exception", e.what(), MsgBox::STYLE_ERROR);
+		return -1;
+	}catch(...)
+	{
+		LOG_CRITICAL("Encountered an unknown fatal exception");
+		MsgBox::show("Unknown Exception", "No details available.", MsgBox::STYLE_ERROR);
+		return -1;
 	}
 
 	LOG_INFO("Application exiting");
 
-	MsgBox::show("Test MsgBox", "This is just a test", MsgBox::STYLE_INFO);
 	return 0;
 }

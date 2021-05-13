@@ -24,6 +24,7 @@
 #include "Shader.h"
 
 #include "Util.h"
+#include "Error.h"
 
 #include <gl/glew.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -89,15 +90,13 @@ void Shader::load()
 
 	if (!read_file(mVertPath, vertSrcStr))
 	{
-		LOG_CRITICAL("Failed to load shader {}", mVertPath);
-		exit(-1);
+		throw SHADER_ERROR("Failed to load file [{}]", mVertPath);
 	}
 
 
 	if (!read_file(mFragPath, fragSrcStr))
 	{
-		LOG_CRITICAL("Failed to load shader {}", mFragPath);
-		exit(-1);
+		throw SHADER_ERROR("Failed to load file [{}]", mFragPath);
 	}
 
 	const auto* vertSrc = vertSrcStr.c_str();
@@ -115,8 +114,7 @@ void Shader::load()
 	{
 		glGetShaderInfoLog(vertShader, 512, nullptr, info);
 		const auto err = fmt::format("Vertex Shader Error [{}]: {}", mVertPath, info);
-		LOG_CRITICAL(err);
-		exit(-1);
+		throw SHADER_ERROR(err);
 	}
 
 	const auto fragShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -129,8 +127,7 @@ void Shader::load()
 	{
 		glGetShaderInfoLog(fragShader, 512, nullptr, info);
 		const auto err = fmt::format("Fragment Shader Error [{}]: {}", mFragPath, info);
-		LOG_CRITICAL(err);
-		exit(-1);
+		throw SHADER_ERROR(err);
 	}
 
 	mProgram = glCreateProgram();
@@ -143,8 +140,7 @@ void Shader::load()
 	{
 		glGetShaderInfoLog(mProgram, 512, nullptr, info);
 		const auto err = fmt::format("Shader Linkage Error [{} & {}]: {}", mVertPath, mFragPath, info);
-		LOG_CRITICAL(err);
-		exit(-1);
+		throw SHADER_ERROR(err);
 	}
 
 
