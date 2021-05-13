@@ -28,13 +28,14 @@
 class BufferObject
 {
 public:
-	BufferObject(list<float> verts);
+	BufferObject(list<float> verts, list<uint> ints);
 
-	void bind();
-	void draw();
+	void bind() const;
+	void draw() const;
 private:
-	uint mVbo;
-	uint mVao;
+	uint mVbo {};
+	uint mVao {};
+	uint mEbo {};
 	list<float> mVertices;
-	
+	list<uint> mIndices;
 };

@@ -29,17 +29,23 @@
 #include "MsgBox.h"
 
 list<float> gVertices = {
-	-0.5f, -0.5f,
-	 0.5f, -0.5f,
-	 0.0f,  0.5f
+	0.5f, 0.5f, // top right 0
+	0.5f, -0.5f, // bottom right 1
+	-0.5f, -0.5f, // bottom left 2
+	-0.5f,  0.5f // top left 3
+};
+
+list<uint> gIndices = {
+	0, 1, 3,
+	1, 2, 3
 };
 
 void run()
 {
-	Display disp("Stick Jumper", 1280, 720);
+	Display disp("Stick Jumper", 800, 600);
 	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
-	BufferObject obj(gVertices);
+	BufferObject obj(gVertices, gIndices);
 
 	while (!disp.isClosed())
 	{

@@ -78,7 +78,7 @@ Display::Display(const std::string& title, const int width, const int height) :
 		throw DISPLAY_ERROR("Failed to initialize glew - {}", glewGetErrorString(init));
 	}
 	
-	//glViewport(0, 0, w, h);
+	glViewport(0, 0, w, h);
 
 	LOG_TRACE("OpenGL Vendor: {}", glGetString(GL_VENDOR));
 	LOG_TRACE("OpenGL Renderer: {}", glGetString(GL_RENDERER));
