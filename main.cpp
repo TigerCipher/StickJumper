@@ -27,6 +27,7 @@
 #include "Error.h"
 #include "Shader.h"
 #include "MsgBox.h"
+#include "Timer.h"
 
 list<float> gVertices = {
 	0.5f, 0.5f, // top right 0
@@ -47,12 +48,21 @@ void run()
 
 	BufferObject obj(gVertices, gIndices);
 
+	Timer timer;
+	
 	while (!disp.isClosed())
 	{
+		float delta = timer.mark();
 		disp.clear(0.2f);
 
+		const auto time = timer.elapsed();
+		const float green = (cos(time) / 2.0f) + 0.5f;
+		const float blue = (sin(time) / 2.0f) + 0.5f;
+
 		basic.bind();
-		//obj.bind();
+		basic.setUniform("sinTime", blue);
+		basic.setUniform("cosTime", green);
+		
 		obj.draw();
 
 		disp.swap();
