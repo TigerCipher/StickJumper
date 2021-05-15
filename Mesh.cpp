@@ -15,17 +15,18 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: BufferObject.cpp
+// File Name: Mesh.cpp
 // Date File Created: 05/11/2021 at 11:32 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-#include "BufferObject.h"
+#include "Mesh.h"
+#include "Vertex.h"
 
 #include <gl/glew.h>
 
-BufferObject::BufferObject(list<float> verts, list<uint> ints):
+Mesh::Mesh(list<Vertex> verts, list<uint> ints):
 	mVertices(std::move(verts)),
 	mIndices(std::move(ints))
 {
@@ -34,28 +35,41 @@ BufferObject::BufferObject(list<float> verts, list<uint> ints):
 	glGenVertexArrays(1, &mVao);
 
 	glBindVertexArray(mVao);
-	
+
 	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
-	glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(float), mVertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(Vertex), mVertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(uint), mIndices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), static_cast<void*>(nullptr));
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+	                      reinterpret_cast<void*>(offsetof(Vertex, pos)));
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+		reinterpret_cast<void*>(offsetof(Vertex, color)));
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
-void BufferObject::bind() const
+Mesh::~Mesh()
+{
+	glDeleteVertexArrays(1, &mVao);
+	glDeleteBuffers(1, &mVbo);
+	glDeleteBuffers(1, &mEbo);
+}
+
+void Mesh::bind() const
 {
 	glBindVertexArray(mVao);
 	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 }
 
-void BufferObject::draw() const
+void Mesh::draw() const
 {
 	glBindVertexArray(mVao);
 	//glDrawArrays(GL_TRIANGLES, 0, 3);

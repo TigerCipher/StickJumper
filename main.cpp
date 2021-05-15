@@ -23,17 +23,18 @@
 
 
 #include "Display.h"
-#include "BufferObject.h"
+#include "Mesh.h"
 #include "Error.h"
 #include "Shader.h"
 #include "MsgBox.h"
 #include "Timer.h"
+#include "Vertex.h"
 
-list<float> gVertices = {
-	0.5f, 0.5f, // top right 0
-	0.5f, -0.5f, // bottom right 1
-	-0.5f, -0.5f, // bottom left 2
-	-0.5f,  0.5f // top left 3
+list<Vertex> gVertices = {
+	{ { 0.5f, 0.5f }, COLOR_RED }, // top right 0
+	{ { 0.5f, -0.5f }, COLOR_GREEN }, // bottom right 1
+	{ { -0.5f, -0.5f }, COLOR_BLUE }, // bottom left 2
+	{ { -0.5f, 0.5f }, COLOR_CYAN } // top left 3
 };
 
 list<uint> gIndices = {
@@ -46,23 +47,23 @@ void run()
 	Display disp("Stick Jumper", 800, 600);
 	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
-	BufferObject obj(gVertices, gIndices);
+	Mesh obj(gVertices, gIndices);
 
 	Timer timer;
-	
+
 	while (!disp.isClosed())
 	{
 		float delta = timer.mark();
 		disp.clear(0.2f);
 
-		const auto time = timer.elapsed();
+		const auto time   = timer.elapsed();
 		const float green = (cos(time) / 2.0f) + 0.5f;
-		const float blue = (sin(time) / 2.0f) + 0.5f;
+		const float blue  = (sin(time) / 2.0f) + 0.5f;
 
 		basic.bind();
-		basic.setUniform("sinTime", blue);
-		basic.setUniform("cosTime", green);
-		
+		//basic.setUniform("sinTime", blue);
+		//basic.setUniform("cosTime", green);
+
 		obj.draw();
 
 		disp.swap();
@@ -72,21 +73,22 @@ void run()
 int main(int argc, char** argv)
 {
 	Log::init();
-	
+
 	try
 	{
 		run();
-	}catch(const Error& e)
+	}
+	catch (const Error& e)
 	{
 		LOG_CRITICAL(e.what());
 		MsgBox::show(e.getType(), e.what(), MsgBox::STYLE_ERROR);
 		return -1;
-	}catch(const std::exception& e)
+	}catch (const std::exception& e)
 	{
 		LOG_CRITICAL(e.what());
 		MsgBox::show("STD Exception", e.what(), MsgBox::STYLE_ERROR);
 		return -1;
-	}catch(...)
+	}catch (...)
 	{
 		LOG_CRITICAL("Encountered an unknown fatal exception");
 		MsgBox::show("Unknown Exception", "No details available.", MsgBox::STYLE_ERROR);

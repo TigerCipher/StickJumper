@@ -15,7 +15,7 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: BufferObject.h
+// File Name: Mesh.h
 // Date File Created: 05/11/2021 at 11:32 PM
 // Author: Matt
 // 
@@ -25,10 +25,14 @@
 
 #include "Common.h"
 
-class BufferObject
+struct Vertex;
+
+class Mesh
 {
 public:
-	BufferObject(list<float> verts, list<uint> ints);
+	Mesh(list<Vertex> verts, list<uint> ints);
+
+	~Mesh();
 
 	void bind() const;
 	void draw() const;
@@ -36,6 +40,6 @@ private:
 	uint mVbo {};
 	uint mVao {};
 	uint mEbo {};
-	list<float> mVertices;
+	list<Vertex> mVertices;
 	list<uint> mIndices;
 };

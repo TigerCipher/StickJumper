@@ -51,11 +51,11 @@ struct Vertex
 };
 
 
-constexpr ColorRGBA8 COLOR_WHITE = { 1, 1, 1 };
-constexpr ColorRGBA8 COLOR_BLACK = { 0, 0, 0 };
-constexpr ColorRGBA8 COLOR_RED = { 1, 0, 0 };
-constexpr ColorRGBA8 COLOR_GREEN = { 0, 1, 0 };
-constexpr ColorRGBA8 COLOR_BLUE = { 0, 0, 1 };
+constexpr ColorRGBA8 COLOR_WHITE   = { 1, 1, 1 };
+constexpr ColorRGBA8 COLOR_BLACK   = { 0, 0, 0 };
+constexpr ColorRGBA8 COLOR_RED     = { 1, 0, 0 };
+constexpr ColorRGBA8 COLOR_GREEN   = { 0, 1, 0 };
+constexpr ColorRGBA8 COLOR_BLUE    = { 0, 0, 1 };
 constexpr ColorRGBA8 COLOR_MAGENTA = { 1, 0, 1 };
-constexpr ColorRGBA8 COLOR_CYAN = { 0, 1, 1 };
-constexpr ColorRGBA8 COLOR_YELLOW = { 1, 1, 0 };
+constexpr ColorRGBA8 COLOR_CYAN    = { 0, 1, 1 };
+constexpr ColorRGBA8 COLOR_YELLOW  = { 1, 1, 0 };
