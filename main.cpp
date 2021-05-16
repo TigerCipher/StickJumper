@@ -30,6 +30,7 @@
 #include "Timer.h"
 #include "Vertex.h"
 #include "Texture.h"
+#include "Input.h"
 
 list<Vertex> gVertices = {
 	{ { 0.5f, 0.5f }, COLOR_RED, {1, 1} }, // top right 0
@@ -70,6 +71,27 @@ void run()
 
 		obj.draw();
 
+		if(Input::keyPressed(KEY_A))
+		{
+			fmt::print("The A key has been pressed!\n");
+		}
+
+		if(Input::keyReleased(KEY_B))
+		{
+			fmt::print("The B key has been released!\n");
+		}
+
+		if(Input::keyDown(KEY_LEFT))
+		{
+			fmt::print("The left arrow is held down!\n");
+		}
+
+		if(Input::buttonPressed(MOUSE_BUTTON_LEFT))
+		{
+			fmt::print("The left mouse button has been pressed!\n");
+		}
+
+		Input::update();
 		disp.swap();
 	}
 }

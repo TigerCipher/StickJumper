@@ -28,9 +28,31 @@
 #include <GLFW/glfw3.h>
 #include <fmt/core.h>
 
+#include "Input.h"
+
 void glfw_error_callback(int error, const char* desc)
 {
 	fmt::print("Error {}: {}", error, desc);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	Input::onKeyCallback(key, scancode, action, mods);
+}
+
+void button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	Input::onButtonCallback(button, action, mods);
+}
+
+void mouse_pos_callback(GLFWwindow* window, double xPos, double yPos)
+{
+	Input::setMousePos(xPos, yPos);
+}
+
+void mouse_scroll_callback(GLFWwindow* window, double xOff, double yOff)
+{
+	Input::setMouseScroll(xOff, yOff);
 }
 
 Display::Display(const std::string& title, const int width, const int height) :
@@ -65,6 +87,11 @@ Display::Display(const std::string& title, const int width, const int height) :
 
 	LOG_TRACE("Creating OpenGL context");
 	glfwMakeContextCurrent(mWindow);
+
+	glfwSetKeyCallback(mWindow, key_callback);
+	glfwSetMouseButtonCallback(mWindow, button_callback);
+	glfwSetCursorPosCallback(mWindow, mouse_pos_callback);
+	glfwSetScrollCallback(mWindow, mouse_scroll_callback);
 
 	glfwSwapInterval(VSYNC);
 

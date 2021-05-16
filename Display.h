@@ -26,8 +26,10 @@
 #include <string>
 #include "Common.h"
 
+
 class Display
 {
+
 public:
 	Display(const std::string& title, int width, int height);
 	~Display();
@@ -46,7 +48,11 @@ public:
 
 private:
 	struct GLFWwindow* mWindow;
+
+	
 	int mWidth;
 	int mHeight;
 	std::string mTitle{};
+
+
 };
