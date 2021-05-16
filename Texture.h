@@ -15,48 +15,46 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: Vertex.h
-// Date File Created: 05/15/2021 at 12:20 AM
+// File Name: Texture.h
+// Date File Created: 05/15/2021 at 5:31 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
+#include "Common.h"
 
-struct Position
+#include <map>
+#include <string>
+
+struct TextureData
 {
-	float x;
-	float y;
+	uint id;
+	int width;
+	int height;
 };
 
-struct TexCoords
+class Texture
 {
-	float u;
-	float v;
+public:
+	Texture(const std::string& filePath);
+	~Texture();
+
+	void bind(uint slot);
+	void unbind(uint slot);
+
+	uint getId() const { return mData.id; }
+
+	int getWidth() const { return mData.width; }
+	int getHeight() const { return mData.height; }
+
+private:
+	static TextureData load(const std::string& path);
+	
+	static uint sCurrentBoundTexture;
+
+	static std::unordered_map<std::string, TextureData> sTextureCache;
+	
+	TextureData mData;
 };
-
-struct ColorRGBA8
-{
-	float r;
-	float g;
-	float b;
-	float a = 1.0f;
-};
-
-struct Vertex
-{
-	Position pos;
-	ColorRGBA8 color;
-	TexCoords tex;
-};
-
-
-constexpr ColorRGBA8 COLOR_WHITE   = { 1, 1, 1 };
-constexpr ColorRGBA8 COLOR_BLACK   = { 0, 0, 0 };
-constexpr ColorRGBA8 COLOR_RED     = { 1, 0, 0 };
-constexpr ColorRGBA8 COLOR_GREEN   = { 0, 1, 0 };
-constexpr ColorRGBA8 COLOR_BLUE    = { 0, 0, 1 };
-constexpr ColorRGBA8 COLOR_MAGENTA = { 1, 0, 1 };
-constexpr ColorRGBA8 COLOR_CYAN    = { 0, 1, 1 };
-constexpr ColorRGBA8 COLOR_YELLOW  = { 1, 1, 0 };

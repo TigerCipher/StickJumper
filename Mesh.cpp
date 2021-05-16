@@ -50,6 +50,10 @@ Mesh::Mesh(list<Vertex> verts, list<uint> ints):
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
 		reinterpret_cast<void*>(offsetof(Vertex, color)));
 
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+		reinterpret_cast<void*>(offsetof(Vertex, tex)));
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -72,7 +76,6 @@ void Mesh::bind() const
 void Mesh::draw() const
 {
 	glBindVertexArray(mVao);
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }

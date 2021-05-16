@@ -29,12 +29,13 @@
 #include "MsgBox.h"
 #include "Timer.h"
 #include "Vertex.h"
+#include "Texture.h"
 
 list<Vertex> gVertices = {
-	{ { 0.5f, 0.5f }, COLOR_RED }, // top right 0
-	{ { 0.5f, -0.5f }, COLOR_GREEN }, // bottom right 1
-	{ { -0.5f, -0.5f }, COLOR_BLUE }, // bottom left 2
-	{ { -0.5f, 0.5f }, COLOR_CYAN } // top left 3
+	{ { 0.5f, 0.5f }, COLOR_RED, {1, 1} }, // top right 0
+	{ { 0.5f, -0.5f }, COLOR_GREEN, {1, 0} }, // bottom right 1
+	{ { -0.5f, -0.5f }, COLOR_BLUE, {0, 0} }, // bottom left 2
+	{ { -0.5f, 0.5f }, COLOR_CYAN, {0, 1} } // top left 3
 };
 
 list<uint> gIndices = {
@@ -48,6 +49,7 @@ void run()
 	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
 	Mesh obj(gVertices, gIndices);
+	Texture testImg("./assets/textures/test.png");
 
 	Timer timer;
 
@@ -63,6 +65,8 @@ void run()
 		basic.bind();
 		//basic.setUniform("sinTime", blue);
 		//basic.setUniform("cosTime", green);
+		basic.setUniform("tex", 1);
+		testImg.bind(1);
 
 		obj.draw();
 
