@@ -7,7 +7,8 @@ A remake of the first game I ever let others play - a project back from high sch
 #### Dependencies
 - glm
 - glew
-- glfw (maybe SDL2 I haven't decided at the time of writing this)
+- glfw3
 - imgui (dev builds only)
 - fmt
 - spdlog
+- SOIL 2
