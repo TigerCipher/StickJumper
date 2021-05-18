@@ -34,10 +34,10 @@
 #include "Math.h"
 
 list<Vertex> gVertices = {
-	{ { 0.5f, 0.5f }, COLOR_RED, {1, 1} }, // top right 0
-	{ { 0.5f, -0.5f }, COLOR_GREEN, {1, 0} }, // bottom right 1
-	{ { -0.5f, -0.5f }, COLOR_BLUE, {0, 0} }, // bottom left 2
-	{ { -0.5f, 0.5f }, COLOR_CYAN, {0, 1} } // top left 3
+	{ { 0.5f, 0.5f }, COLOR_RED, { 1, 1 } }, // top right 0
+	{ { 0.5f, -0.5f }, COLOR_GREEN, { 1, 0 } }, // bottom right 1
+	{ { -0.5f, -0.5f }, COLOR_BLUE, { 0, 0 } }, // bottom left 2
+	{ { -0.5f, 0.5f }, COLOR_CYAN, { 0, 1 } } // top left 3
 };
 
 list<uint> gIndices = {
@@ -56,52 +56,51 @@ void run()
 
 	Timer timer;
 
-	mat4f trans(1);
-	trans = glm::translate(trans, vec3f(0.5f, -0.5f, 0));
-	trans = glm::scale(trans, vec3f(0.5f, 0.5f, 0.5f));
+	mat4f modelTransform(1);
+	modelTransform = glm::scale(modelTransform, vec3f(0.5f, 0.5f, 0));
+
+	mat4f worldTransform(1);
 
 	while (!disp.isClosed())
 	{
-		float delta = timer.mark();
+		const float delta = timer.mark();
 		disp.clear(0.2f);
 
-		const auto time   = timer.elapsed();
-		const float green = (cos(time) / 2.0f) + 0.5f;
-		const float blue  = (sin(time) / 2.0f) + 0.5f;
-
 		basic.bind();
-		//basic.setUniform("sinTime", blue);
-		//basic.setUniform("cosTime", green);
+
 		basic.setUniform("tex", 1);
 		basic.setUniform("smileTex", 2);
 		testImg.bind(1);
 		smileImg.bind(2);
 
-		trans = glm::rotate(trans, delta, vec3f(0, 0, 1));
+
+		if (Input::keyDown(KEY_A))
+		{
+			worldTransform = glm::translate(worldTransform, vec3f(-delta, 0, 0));
+		}
+
+		if(Input::keyDown(KEY_D))
+		{
+			worldTransform = glm::translate(worldTransform, vec3f(delta, 0, 0));
+		}
+
+		if (Input::keyDown(KEY_S))
+		{
+			worldTransform = glm::translate(worldTransform, vec3f(0, -delta, 0));
+		}
+
+		if (Input::keyDown(KEY_W))
+		{
+			worldTransform = glm::translate(worldTransform, vec3f(0, delta, 0));
+		}
 		
-		basic.setUniform("transform", trans);
+		modelTransform = glm::rotate(modelTransform, delta, vec3f(0, 0, 1));
+
+		basic.setUniform("model", modelTransform);
+		basic.setUniform("world", worldTransform);
 
 		obj.draw();
 
-		if(Input::keyPressed(KEY_A))
-		{
-			fmt::print("The A key has been pressed!\n");
-		}
-
-		if(Input::keyReleased(KEY_B))
-		{
-			fmt::print("The B key has been released!\n");
-		}
-
-		if(Input::keyDown(KEY_LEFT))
-		{
-			fmt::print("The left arrow is held down!\n");
-		}
-
-		if(Input::buttonPressed(MOUSE_BUTTON_LEFT))
-		{
-			fmt::print("The left mouse button has been pressed!\n");
-		}
 
 		Input::update();
 		disp.swap();
