@@ -15,45 +15,25 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: Texture.h
-// Date File Created: 05/15/2021 at 5:31 PM
+// File Name: Math.h
+// Date File Created: 05/18/2021 at 12:00 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Common.h"
+#include <glm/gtc/matrix_transform.hpp>
 
-#include <map>
-#include <string>
+constexpr float PI = 3.14159265358979323846f;
+constexpr double PI_D = 3.1415926535897932384626433832795;
 
-struct TextureData
+constexpr float to_radians(const float degs)
 {
-	uint id;
-	int width;
-	int height;
-};
+	return degs * PI / 180.0f;
+}
 
-class Texture
+constexpr float to_degrees(const float rads)
 {
-public:
-	Texture(const std::string& filePath);
-	~Texture();
-
-	void bind(uint slot);
-	void unbind(uint slot);
-
-	uint getId() const { return mData.id; }
-
-	int getWidth() const { return mData.width; }
-	int getHeight() const { return mData.height; }
-
-private:
-	static TextureData load(const std::string& path);
-	
-	static std::unordered_map<std::string, TextureData> sTextureCache;
-	
-	TextureData mData;
-	bool mBound = false;
-};
+	return rads * 180.0f / PI;
+}

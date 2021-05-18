@@ -107,6 +107,10 @@ Display::Display(const std::string& title, const int width, const int height) :
 	
 	glViewport(0, 0, w, h);
 
+	// Enable OpenGL features
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
 	LOG_TRACE("OpenGL Vendor: {}", glGetString(GL_VENDOR));
 	LOG_TRACE("OpenGL Renderer: {}", glGetString(GL_RENDERER));
 	int major, minor;

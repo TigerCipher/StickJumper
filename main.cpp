@@ -31,6 +31,7 @@
 #include "Vertex.h"
 #include "Texture.h"
 #include "Input.h"
+#include "Math.h"
 
 list<Vertex> gVertices = {
 	{ { 0.5f, 0.5f }, COLOR_RED, {1, 1} }, // top right 0
@@ -51,8 +52,13 @@ void run()
 
 	Mesh obj(gVertices, gIndices);
 	Texture testImg("./assets/textures/test.png");
+	Texture smileImg("./assets/textures/smile.png");
 
 	Timer timer;
+
+	mat4f trans(1);
+	//trans = glm::rotate(trans, to_radians(90.0f), vec3f(0, 0, 1));
+	//trans = glm::scale(trans, vec3f(0.5f, 0.5f, 0.5f));
 
 	while (!disp.isClosed())
 	{
@@ -67,7 +73,11 @@ void run()
 		//basic.setUniform("sinTime", blue);
 		//basic.setUniform("cosTime", green);
 		basic.setUniform("tex", 1);
+		basic.setUniform("smileTex", 2);
 		testImg.bind(1);
+		smileImg.bind(2);
+
+		basic.setUniform("transform", trans);
 
 		obj.draw();
 

@@ -10,9 +10,10 @@ out vec4 fragColor;
 //uniform float cosTime;
 
 uniform sampler2D tex;
+uniform sampler2D smileTex;
 
 void main()
 {
-	vec4 texColor = texture(tex, fragTex);
+	vec4 texColor = mix(texture(tex, fragTex), texture(smileTex, fragTex), 0.4);
 	fragColor = texColor * vColor;
 }

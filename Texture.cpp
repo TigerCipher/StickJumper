@@ -27,7 +27,6 @@
 
 #include <gl/glew.h>
 
-uint Texture::sCurrentBoundTexture = 0;
 std::unordered_map<std::string, TextureData> Texture::sTextureCache;
 
 
@@ -49,24 +48,19 @@ Texture::Texture(const std::string& filePath)
 
 Texture::~Texture()
 {
-	if(sCurrentBoundTexture != 0)
+	if (mBound)
 	{
-		LOG_TRACE("Unbinding texture, ID: {}", sCurrentBoundTexture);
-		unbind(sCurrentBoundTexture);
+		unbind(mData.id);
 	}
 }
 
 
 void Texture::bind(const uint slot)
 {
-	if(mData.id != sCurrentBoundTexture)
-	{
-		if(sCurrentBoundTexture != 0) unbind(sCurrentBoundTexture);
-		assert(slot < 31 && slot >= 0);
-		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, mData.id);
-		sCurrentBoundTexture = mData.id;
-	}
+	assert(slot < 31 && slot >= 0);
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, mData.id);
+	mBound = true;
 }
 
 void Texture::unbind(const uint slot)
@@ -74,7 +68,7 @@ void Texture::unbind(const uint slot)
 	assert(slot < 31 && slot >= 0);
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	sCurrentBoundTexture = 0;
+	mBound = false;
 }
 
 TextureData Texture::load(const std::string& path)
@@ -106,7 +100,7 @@ TextureData Texture::load(const std::string& path)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	data.width = w;
+	data.width  = w;
 	data.height = h;
 
 	LOG_INFO("Texture loaded");
