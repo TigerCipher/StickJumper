@@ -56,16 +56,24 @@ Texture::~Texture()
 }
 
 
-void Texture::bind(const uint slot)
+void Texture::bind(uint slot)
 {
+	if(slot == 99)
+	{
+		slot = mData.id;
+	}
 	assert(slot < 31 && slot >= 0);
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, mData.id);
 	mBound = true;
 }
 
-void Texture::unbind(const uint slot)
+void Texture::unbind(uint slot)
 {
+	if (slot == 99)
+	{
+		slot = mData.id;
+	}
 	assert(slot < 31 && slot >= 0);
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, 0);

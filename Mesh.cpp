@@ -67,6 +67,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &mEbo);
 }
 
+
 void Mesh::bind() const
 {
 	glBindVertexArray(mVao);

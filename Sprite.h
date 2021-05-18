@@ -15,46 +15,42 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: Texture.h
-// Date File Created: 05/15/2021 at 5:31 PM
+// File Name: Sprite.h
+// Date File Created: 05/18/2021 at 2:25 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Common.h"
-
-#include <map>
 #include <string>
 
-struct TextureData
-{
-	uint id;
-	int width;
-	int height;
-};
+#include "Texture.h"
+#include "Math.h"
+#include "Shader.h"
+#include "Mesh.h"
 
-class Texture
+class Sprite
 {
 public:
-	Texture(const std::string& filePath);
-	~Texture();
+	Sprite(const std::string& tex, float scale = 1.0f);
+	~Sprite() = default;
 
-	void bind(uint slot = 99);
-	void unbind(uint slot = 99);
+	void setScale(const float scale) { mScale = scale; }
 
-	uint getId() const { return mData.id; }
+	void setPosition(const vec2f& pos);
+	void setPosition(const float x, const float y) { setPosition({x, y}); }
 
-	int getWidth() const { return mData.width; }
-	int getHeight() const { return mData.height; }
+	void move(float delta, float x, float y);
 
+	void render(const Shader& shader);
 
 private:
-	static TextureData load(const std::string& path);
-	
-	static std::unordered_map<std::string, TextureData> sTextureCache;
-	
-	TextureData mData {};
-	bool mBound = false;
+	Texture mTexture;
+	Mesh mMesh;
+
+	vec2f mPosition {};
+	float mScale;
+	mat4f mTransform { 1 };
+	mat4f mWorld { 1 };
 };

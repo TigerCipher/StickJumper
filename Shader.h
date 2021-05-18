@@ -35,15 +35,16 @@ public:
 	Shader(std::string vert, std::string frag);
 
 	void init(std::string vert, std::string frag);
-	void bind();
+	void bind() const;
+	void unbind() const;
 	
-	void setUniform(const std::string& name, const mat4f& value);
-	void setUniform(const std::string& name, const vec4f& value);
-	void setUniform(const std::string& name, const vec3f& value);
-	void setUniform(const std::string& name, const vec2f& value);
-	void setUniform(const std::string& name, float value);
-	void setUniform(const std::string& name, int value);
-	void setUniform(const std::string& name, uint value);
+	void setMat4(const std::string& name, const mat4f& value) const;
+	void setVec4(const std::string& name, const vec4f& value) const;
+	void setVec3(const std::string& name, const vec3f& value) const;
+	void setVec2(const std::string& name, const vec2f& value) const;
+	void setFloat(const std::string& name, float value) const;
+	void setInt(const std::string& name, int value) const;
+	void setUnsignedInt(const std::string& name, uint value) const;
 
 private:
 	void load();

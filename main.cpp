@@ -32,15 +32,16 @@
 #include "Texture.h"
 #include "Input.h"
 #include "Math.h"
+#include "Sprite.h"
 
-list<Vertex> gVertices = {
+list<Vertex> gVertices2 = {
 	{ { 0.5f, 0.5f }, COLOR_RED, { 1, 1 } }, // top right 0
 	{ { 0.5f, -0.5f }, COLOR_GREEN, { 1, 0 } }, // bottom right 1
 	{ { -0.5f, -0.5f }, COLOR_BLUE, { 0, 0 } }, // bottom left 2
 	{ { -0.5f, 0.5f }, COLOR_CYAN, { 0, 1 } } // top left 3
 };
 
-list<uint> gIndices = {
+list<uint> gIndices2 = {
 	0, 1, 3,
 	1, 2, 3
 };
@@ -50,7 +51,7 @@ void run()
 	Display disp("Stick Jumper", 800, 600);
 	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
-	Mesh obj(gVertices, gIndices);
+	Mesh obj(gVertices2, gIndices2);
 	Texture testImg("./assets/textures/test.png");
 	Texture smileImg("./assets/textures/smile.png");
 
@@ -61,45 +62,22 @@ void run()
 
 	mat4f worldTransform(1);
 
+	Sprite spr("./assets/textures/test.png", 0.5f);
+
+	spr.setPosition(-0.5f, 0);
+
 	while (!disp.isClosed())
 	{
 		const float delta = timer.mark();
 		disp.clear(0.2f);
 
-		basic.bind();
-
-		basic.setUniform("tex", 1);
-		basic.setUniform("smileTex", 2);
-		testImg.bind(1);
-		smileImg.bind(2);
-
-
-		if (Input::keyDown(KEY_A))
-		{
-			worldTransform = glm::translate(worldTransform, vec3f(-delta, 0, 0));
-		}
 
 		if(Input::keyDown(KEY_D))
 		{
-			worldTransform = glm::translate(worldTransform, vec3f(delta, 0, 0));
-		}
-
-		if (Input::keyDown(KEY_S))
-		{
-			worldTransform = glm::translate(worldTransform, vec3f(0, -delta, 0));
-		}
-
-		if (Input::keyDown(KEY_W))
-		{
-			worldTransform = glm::translate(worldTransform, vec3f(0, delta, 0));
+			spr.move(delta, 1, 0);
 		}
 		
-		modelTransform = glm::rotate(modelTransform, delta, vec3f(0, 0, 1));
-
-		basic.setUniform("model", modelTransform);
-		basic.setUniform("world", worldTransform);
-
-		obj.draw();
+		spr.render(basic);
 
 
 		Input::update();
