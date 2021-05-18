@@ -57,8 +57,8 @@ void run()
 	Timer timer;
 
 	mat4f trans(1);
-	//trans = glm::rotate(trans, to_radians(90.0f), vec3f(0, 0, 1));
-	//trans = glm::scale(trans, vec3f(0.5f, 0.5f, 0.5f));
+	trans = glm::translate(trans, vec3f(0.5f, -0.5f, 0));
+	trans = glm::scale(trans, vec3f(0.5f, 0.5f, 0.5f));
 
 	while (!disp.isClosed())
 	{
@@ -77,6 +77,8 @@ void run()
 		testImg.bind(1);
 		smileImg.bind(2);
 
+		trans = glm::rotate(trans, delta, vec3f(0, 0, 1));
+		
 		basic.setUniform("transform", trans);
 
 		obj.draw();

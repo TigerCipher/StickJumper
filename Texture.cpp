@@ -50,6 +50,7 @@ Texture::~Texture()
 {
 	if (mBound)
 	{
+		LOG_TRACE("Unbinding texture {}", mData.id);
 		unbind(mData.id);
 	}
 }
@@ -70,6 +71,7 @@ void Texture::unbind(const uint slot)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	mBound = false;
 }
+
 
 TextureData Texture::load(const std::string& path)
 {
@@ -103,6 +105,6 @@ TextureData Texture::load(const std::string& path)
 	data.width  = w;
 	data.height = h;
 
-	LOG_INFO("Texture loaded");
+	LOG_INFO("Texture loaded with ID: {}", data.id);
 	return data;
 }

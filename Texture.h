@@ -49,11 +49,12 @@ public:
 	int getWidth() const { return mData.width; }
 	int getHeight() const { return mData.height; }
 
+
 private:
 	static TextureData load(const std::string& path);
 	
 	static std::unordered_map<std::string, TextureData> sTextureCache;
 	
-	TextureData mData;
+	TextureData mData {};
 	bool mBound = false;
 };
