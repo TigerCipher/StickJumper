@@ -30,6 +30,8 @@
 
 #include "Input.h"
 
+// GLFW Callbacks
+
 void glfw_error_callback(int error, const char* desc)
 {
 	fmt::print("Error {}: {}", error, desc);
@@ -47,13 +49,24 @@ void button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void mouse_pos_callback(GLFWwindow* window, double xPos, double yPos)
 {
-	Input::setMousePos(xPos, yPos);
+	Input::setMousePos(static_cast<float>(xPos), static_cast<float>(yPos));
 }
 
 void mouse_scroll_callback(GLFWwindow* window, double xOff, double yOff)
 {
-	Input::setMouseScroll(xOff, yOff);
+	Input::setMouseScroll(static_cast<float>(xOff), static_cast<float>(yOff));
 }
+
+
+void window_resize_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	auto disp = static_cast<Display*>(glfwGetWindowUserPointer(window));
+	disp->setWidth(width);
+	disp->setHeight(height);
+}
+
+// END GLFW Callbacks
 
 Display::Display(const std::string& title, const int width, const int height) :
 	mWidth(width),
@@ -80,6 +93,7 @@ Display::Display(const std::string& title, const int width, const int height) :
 		throw DISPLAY_ERROR("Failed to create window");
 	}
 	LOG_TRACE("Window has been created successfully");
+
 	
 	const auto centerX = (glfwGetVideoMode(glfwGetPrimaryMonitor())->width / 2) - (width / 2);
 	const auto centerY = (glfwGetVideoMode(glfwGetPrimaryMonitor())->height / 2) - (height / 2);
@@ -93,14 +107,15 @@ Display::Display(const std::string& title, const int width, const int height) :
 	glfwSetCursorPosCallback(mWindow, mouse_pos_callback);
 	glfwSetScrollCallback(mWindow, mouse_scroll_callback);
 
+	glfwSetWindowSizeCallback(mWindow, window_resize_callback);
+
 	glfwSwapInterval(VSYNC);
 
 	int w, h;
 	glfwGetFramebufferSize(mWindow, &w, &h);
 
 	LOG_TRACE("Initializing GLEW");
-	const auto init = glewInit();
-	if (init)
+	if (const auto init = glewInit(); init)
 	{
 		throw DISPLAY_ERROR("Failed to initialize glew - {}", glewGetErrorString(init));
 	}
@@ -120,6 +135,10 @@ Display::Display(const std::string& title, const int width, const int height) :
 	LOG_TRACE("GLSL Version {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	LOG_DEBUG("GLSL Extensions: {}", glGetString(GL_EXTENSIONS));
 	LOG_INFO("Display is initialized");
+
+
+	
+	glfwSetWindowUserPointer(mWindow, this);
 }
 
 Display::~Display()

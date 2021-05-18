@@ -53,6 +53,11 @@ void run()
 		const float delta = timer.mark();
 		disp.clear(0.2f);
 
+		if(Input::buttonPressed(MOUSE_BUTTON_LEFT))
+		{
+			LOG_DEBUG("Display resolution: ({}, {})", disp.getWidth(), disp.getHeight());
+		}
+
 		static float movSpd = 5.0f;
 		if(Input::keyDown(KEY_D))
 		{

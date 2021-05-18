@@ -35,12 +35,16 @@ public:
 	~Display();
 
 	void swap() const;
-	void clear(float red = 0, float green = 0, float blue = 0);
+	static void clear(float red = 0, float green = 0, float blue = 0);
 
 	bool isClosed() const;
 
 	int getWidth() const { return mWidth; }
 	int getHeight() const { return mHeight; }
+
+	void setWidth(const int width) { mWidth = width; }
+	void setHeight(const int height) { mHeight = height; }
+	
 	vec2f getCenter() const;
 	vec2f getWhVector() const;
 
