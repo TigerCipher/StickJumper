@@ -29,6 +29,7 @@
 #include "Math.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Vertex.h"
 
 class Sprite
 {
@@ -40,6 +41,8 @@ public:
 
 	void setPosition(const vec2f& pos);
 	void setPosition(const float x, const float y) { setPosition({x, y}); }
+
+	void setColor(const ColorRGBA8 col) { mColor = col; }
 
 	void translate(float x, float y);
 	void rotate(float angle, Axis axis);
@@ -54,4 +57,6 @@ private:
 	vec2f mPosition {};
 	mat4f mRotTransform { 1 };
 	mat4f mTransform { 1 };
+	ColorRGBA8 mColor{};
+	
 };

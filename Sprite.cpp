@@ -25,21 +25,21 @@
 
 #include "Vertex.h"
 
-list<Vertex> gVertices = {
-	{ { 0.5f, 0.5f }, COLOR_RED, { 1, 1 } }, // top right 0
-	{ { 0.5f, -0.5f }, COLOR_GREEN, { 1, 0 } }, // bottom right 1
-	{ { -0.5f, -0.5f }, COLOR_BLUE, { 0, 0 } }, // bottom left 2
-	{ { -0.5f, 0.5f }, COLOR_CYAN, { 0, 1 } } // top left 3
+const list<Vertex> G_VERTICES = {
+	{ { 0.5f, 0.5f }, { 1, 1 } }, // top right 0
+	{ { 0.5f, -0.5f }, { 1, 0 } }, // bottom right 1
+	{ { -0.5f, -0.5f }, { 0, 0 } }, // bottom left 2
+	{ { -0.5f, 0.5f }, { 0, 1 } } // top left 3
 };
 
-list<uint> gIndices = {
+const list<uint> G_INDICES = {
 	0, 1, 3,
 	1, 2, 3
 };
 
 Sprite::Sprite(const std::string& tex, const float scale):
 	mTexture(tex),
-	mMesh(gVertices, gIndices),
+	mMesh(G_VERTICES, G_INDICES),
 	mScale(scale)
 {
 	mTransform = glm::scale(mTransform, vec3f(scale, scale, 0));
@@ -58,7 +58,7 @@ void Sprite::setPosition(const vec2f& pos)
 }
 
 
-void Sprite::translate(float x, float y)
+void Sprite::translate(const float x, const float y)
 {
 	mTransform = glm::translate(mTransform, vec3f(x, y, 0));
 }
@@ -71,6 +71,8 @@ void Sprite::rotate(const float angle, const Axis axis)
 void Sprite::render(const Shader& shader)
 {
 	shader.bind();
+
+	shader.setVec4("colorOverlay", vec4f(mColor.r, mColor.g, mColor.b, mColor.a));
 
 	shader.setInt("tex", mTexture.getId());
 	mTexture.bind();

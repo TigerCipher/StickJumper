@@ -73,6 +73,16 @@ public:
 	const char* getName() const override { return "Display Error"; }
 };
 
+class TextureError : public Error
+{
+public:
+	TextureError(const char* file, const int line, std::string info) :
+		Error(file, line, std::move(info)) {}
+
+	const char* getName() const override { return "Texture Error"; }
+};
+
 
 #define SHADER_ERROR(x, ...) ShaderError(__FILE__, __LINE__, fmt::format(x, __VA_ARGS__))
 #define DISPLAY_ERROR(x, ...) DisplayError(__FILE__, __LINE__, fmt::format(x, __VA_ARGS__))
+#define TEXTURE_ERROR(x, ...) TextureError(__FILE__, __LINE__, fmt::format(x, __VA_ARGS__))

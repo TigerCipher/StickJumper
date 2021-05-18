@@ -39,40 +39,49 @@ void run()
 	Display disp("Stick Jumper", 800, 600);
 	const Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
-
 	Timer timer;
 
-
-	Sprite spr("./assets/textures/test.png", 0.5f);
+	Sprite spr("./assets/textures/smile.png", 0.5f);
 
 	spr.setPosition(-0.5f, 0);
-	spr.setScale(0.2f);
+	spr.setScale(0.35f);
 	spr.rotate(45.0f, AXIS_Z);
+	spr.setColor(COLOR_CYAN);
 
 	while (!disp.isClosed())
 	{
 		const float delta = timer.mark();
 		disp.clear(0.2f);
 
-
+		static float movSpd = 5.0f;
 		if(Input::keyDown(KEY_D))
 		{
-			spr.translate(delta * 5, 0);
+			spr.translate(delta * movSpd, 0);
 		}
 
 		if (Input::keyDown(KEY_A))
 		{
-			spr.translate(delta * -5, 0);
+			spr.translate(delta * -movSpd, 0);
 		}
 
 		if (Input::keyDown(KEY_S))
 		{
-			spr.translate(0, delta * -5);
+			spr.translate(0, delta * -movSpd);
 		}
 
 		if (Input::keyDown(KEY_W))
 		{
-			spr.translate(0, delta * 5);
+			spr.translate(0, delta * movSpd);
+		}
+		static float rotSpd = 125.0f;
+		if(Input::keyDown(KEY_E))
+		{
+			spr.rotate(delta * -rotSpd, AXIS_Z);
+		}
+
+		if(Input::keyDown(KEY_Q))
+		{
+			spr.rotate(delta * rotSpd, AXIS_Z);
 		}
 		
 		spr.render(basic);

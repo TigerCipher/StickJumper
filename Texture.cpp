@@ -23,6 +23,8 @@
 
 #include "Texture.h"
 
+#include "Error.h"
+
 #include <SOIL2/SOIL2.h>
 
 #include <gl/glew.h>
@@ -91,6 +93,11 @@ TextureData Texture::load(const std::string& path)
 
 	ubyte* img = SOIL_load_image(path.c_str(), &w, &h,
 	                             nullptr, SOIL_LOAD_RGBA);
+
+	if(!img)
+	{
+		throw TEXTURE_ERROR("Texture {} not found", path);
+	}
 
 	glGenTextures(1, &data.id);
 
