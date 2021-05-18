@@ -43,18 +43,29 @@ Sprite::Sprite(const std::string& tex, const float scale):
 	mScale(scale)
 {
 	mTransform = glm::scale(mTransform, vec3f(scale, scale, 0));
-	LOG_DEBUG("Texture ID is {}", mTexture.getId());
+}
+
+void Sprite::setScale(const float scale)
+{
+	mScale     = scale;
+	mTransform = glm::scale(mTransform, vec3f(scale, scale, 0));
 }
 
 void Sprite::setPosition(const vec2f& pos)
 {
-	mPosition = pos;
-	mWorld = glm::translate(mat4f(1), vec3f(pos.x, pos.y, 0));
+	mPosition  = pos;
+	mTransform = glm::translate(mat4f(1), vec3f(pos.x, pos.y, 0));
 }
 
-void Sprite::move(float delta, float x, float y)
+
+void Sprite::translate(float x, float y)
 {
-	mWorld = glm::translate(mWorld, vec3f(x * delta, y * delta, 0));
+	mTransform = glm::translate(mTransform, vec3f(x, y, 0));
+}
+
+void Sprite::rotate(const float angle, const Axis axis)
+{
+	mRotTransform = glm::rotate(mRotTransform, to_radians(angle), get_axis(axis));
 }
 
 void Sprite::render(const Shader& shader)
@@ -63,10 +74,10 @@ void Sprite::render(const Shader& shader)
 
 	shader.setInt("tex", mTexture.getId());
 	mTexture.bind();
-	
-	shader.setMat4("model", mTransform);
 
-	shader.setMat4("world", mWorld);
+	shader.setMat4("rotMatrix", mRotTransform);
+
+	shader.setMat4("transform", mTransform);
 
 	mMesh.draw();
 

@@ -26,7 +26,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Common.h"
 
-constexpr float PI = 3.14159265358979323846f;
+constexpr float PI    = 3.14159265358979323846f;
 constexpr double PI_D = 3.1415926535897932384626433832795;
 
 constexpr float to_radians(const float degs)
@@ -37,4 +37,32 @@ constexpr float to_radians(const float degs)
 constexpr float to_degrees(const float rads)
 {
 	return rads * 180.0f / PI;
+}
+
+enum Axis
+{
+	AXIS_X,
+	AXIS_Y,
+	AXIS_Z,
+	AXIS_XY,
+	AXIS_XZ,
+	AXIS_YZ,
+	AXIS_XYZ
+};
+
+constexpr vec3f get_axis(const Axis axis)
+{
+	return axis == AXIS_X
+		       ? vec3f(1, 0, 0)
+		       : axis == AXIS_Y
+		       ? vec3f(0, 1, 0)
+		       : axis == AXIS_Z
+		       ? vec3f(0, 0, 1)
+		       : axis == AXIS_XY
+		       ? vec3f(1, 1, 0)
+		       : axis == AXIS_XZ
+		       ? vec3f(1, 0, 1)
+		       : axis == AXIS_YZ
+		       ? vec3f(0, 1, 1)
+		       : vec3f(1, 1, 1);
 }

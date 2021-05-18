@@ -36,21 +36,22 @@ public:
 	Sprite(const std::string& tex, float scale = 1.0f);
 	~Sprite() = default;
 
-	void setScale(const float scale) { mScale = scale; }
+	void setScale(float scale);
 
 	void setPosition(const vec2f& pos);
 	void setPosition(const float x, const float y) { setPosition({x, y}); }
 
-	void move(float delta, float x, float y);
+	void translate(float x, float y);
+	void rotate(float angle, Axis axis);
 
 	void render(const Shader& shader);
 
 private:
 	Texture mTexture;
 	Mesh mMesh;
+	float mScale;
 
 	vec2f mPosition {};
-	float mScale;
+	mat4f mRotTransform { 1 };
 	mat4f mTransform { 1 };
-	mat4f mWorld { 1 };
 };

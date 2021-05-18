@@ -34,37 +34,20 @@
 #include "Math.h"
 #include "Sprite.h"
 
-list<Vertex> gVertices2 = {
-	{ { 0.5f, 0.5f }, COLOR_RED, { 1, 1 } }, // top right 0
-	{ { 0.5f, -0.5f }, COLOR_GREEN, { 1, 0 } }, // bottom right 1
-	{ { -0.5f, -0.5f }, COLOR_BLUE, { 0, 0 } }, // bottom left 2
-	{ { -0.5f, 0.5f }, COLOR_CYAN, { 0, 1 } } // top left 3
-};
-
-list<uint> gIndices2 = {
-	0, 1, 3,
-	1, 2, 3
-};
-
 void run()
 {
 	Display disp("Stick Jumper", 800, 600);
-	Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
+	const Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
-	Mesh obj(gVertices2, gIndices2);
-	Texture testImg("./assets/textures/test.png");
-	Texture smileImg("./assets/textures/smile.png");
 
 	Timer timer;
 
-	mat4f modelTransform(1);
-	modelTransform = glm::scale(modelTransform, vec3f(0.5f, 0.5f, 0));
-
-	mat4f worldTransform(1);
 
 	Sprite spr("./assets/textures/test.png", 0.5f);
 
 	spr.setPosition(-0.5f, 0);
+	spr.setScale(0.2f);
+	spr.rotate(45.0f, AXIS_Z);
 
 	while (!disp.isClosed())
 	{
@@ -74,7 +57,22 @@ void run()
 
 		if(Input::keyDown(KEY_D))
 		{
-			spr.move(delta, 1, 0);
+			spr.translate(delta * 5, 0);
+		}
+
+		if (Input::keyDown(KEY_A))
+		{
+			spr.translate(delta * -5, 0);
+		}
+
+		if (Input::keyDown(KEY_S))
+		{
+			spr.translate(0, delta * -5);
+		}
+
+		if (Input::keyDown(KEY_W))
+		{
+			spr.translate(0, delta * 5);
 		}
 		
 		spr.render(basic);
