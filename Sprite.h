@@ -36,7 +36,7 @@
 class Sprite
 {
 public:
-	Sprite(const std::string& tex, float scale = 1.0f);
+	Sprite(const std::string& tex, float x, float y, float w, float h);
 	~Sprite() = default;
 
 	void setScale(float scale);
@@ -55,11 +55,10 @@ public:
 
 private:
 	Texture mTexture;
-	Mesh mMesh;
-	float mScale;
+	scope<Mesh> mMesh;
+	float mScale = 1.0f;
 
 	vec2f mPosition {};
-	mat4f mRotTransform { 1 };
 	mat4f mTransform { 1 };
 	ColorRGBA8 mColor{};
 	

@@ -36,11 +36,8 @@ void Camera::update()
 {
 	if (mUpdateMatrix)
 	{
-		LOG_DEBUG("Camera pos: {} , {}", mPosition.x, mPosition.y);
 		const vec3f translation(-mPosition.x + mScreenWidth / 2, -mPosition.y + mScreenHeight / 2, 0);
-		LOG_DEBUG("Trans pos: {} , {}", translation.x, translation.y);
 		mTransform    = glm::translate(mProjection, translation);
-		//mTransform    = glm::translate(mTransform, vec3f(mPosition, 0));
 		mTransform    = glm::scale(mat4f(1), vec3f(mScale, mScale, 0)) * mTransform;
 		mUpdateMatrix = false;
 	}
@@ -49,9 +46,12 @@ void Camera::update()
 vec2f Camera::convertScreenToWorld(const vec2f& screenCoords) const
 {
 	vec2f worldCoords {};
-	worldCoords.x = mScreenHeight - screenCoords.y;
+	worldCoords.x = mScreenWidth - screenCoords.x;
+	worldCoords.y = mScreenHeight - screenCoords.y;
 	worldCoords -= vec2f(mScreenWidth / 2, mScreenHeight / 2);
 	worldCoords /= mScale;
 	worldCoords += mPosition;
+	//worldCoords.x = screenCoords.x * 2.0f / mScreenWidth - 1.0f;
+	//worldCoords.y = screenCoords.y * 2.0f / mScreenHeight - 1.0f;
 	return worldCoords;
 }

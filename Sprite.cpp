@@ -25,34 +25,23 @@
 
 #include "Vertex.h"
 
-//const list<Vertex> G_VERTICES = {
-//	{ { 0.5f, 0.5f }, { 1, 1 } }, // top right 0
-//	{ { 0.5f, -0.5f }, { 1, 0 } }, // bottom right 1
-//	{ { -0.5f, -0.5f }, { 0, 0 } }, // bottom left 2
-//	{ { -0.5f, 0.5f }, { 0, 1 } } // top left 3
-//};
 
-// TODO: Make objects take x1, y1, x2, and y2 coords to fill the vertex data
-// Will make life easier for tracking position - and making camera follow a player
-
-const list<Vertex> G_VERTICES = {
-	{ { 400, 300 }, { 1, 1 } }, // top right 0
-	{ { 400, -300 }, { 1, 0 } }, // bottom right 1
-	{ { -400, -300 }, { 0, 0 } }, // bottom left 2
-	{ { -400, 300 }, { 0, 1 } } // top left 3
-};
-
-const list<uint> G_INDICES = {
-	0, 1, 3,
-	1, 2, 3
-};
-
-Sprite::Sprite(const std::string& tex, const float scale):
-	mTexture(tex),
-	mMesh(G_VERTICES, G_INDICES),
-	mScale(scale)
+Sprite::Sprite(const std::string& tex, const float x, const float y, const float w, const float h):
+	mTexture(tex)
 {
-	mTransform = glm::scale(mTransform, vec3f(scale, scale, 0));
+	const list<Vertex> verts = {
+		{ { x + w, y + h }, { 1, 1 } },
+		{ { x + w, y }, { 1, 0 } },
+		{ { x, y }, { 0, 0 } },
+		{ { x, y + h }, { 0, 1 } }
+	};
+
+	const list<uint> ints = {
+		0, 1, 3,
+		1, 2, 3
+	};
+
+	mMesh = create_scope<Mesh>(verts, ints);
 }
 
 void Sprite::setScale(const float scale)
@@ -64,7 +53,7 @@ void Sprite::setScale(const float scale)
 void Sprite::setPosition(const vec2f& pos)
 {
 	mPosition  = pos;
-	mTransform = glm::translate(mat4f(1), vec3f(pos.x, pos.y, 0));
+	mTransform = glm::translate(mTransform, vec3f(pos.x, pos.y, 0));
 }
 
 
@@ -75,7 +64,7 @@ void Sprite::translate(const float x, const float y)
 
 void Sprite::rotate(const float angle, const Axis axis)
 {
-	mRotTransform = glm::rotate(mRotTransform, to_radians(angle), get_axis(axis));
+	mTransform = glm::rotate(mTransform, to_radians(angle), get_axis(axis));
 }
 
 void Sprite::render(const Shader& shader)
@@ -85,10 +74,8 @@ void Sprite::render(const Shader& shader)
 	shader.setInt("tex", mTexture.getId());
 	mTexture.bind();
 
-	//shader.setMat4("rotMatrix", mRotTransform);
-
 	shader.setMat4("transform", mTransform);
 
-	mMesh.draw();
+	mMesh->draw();
 	mTexture.unbind();
 }

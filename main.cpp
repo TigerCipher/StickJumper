@@ -43,16 +43,26 @@ void run()
 	const Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
 
 	Camera cam(disp);
-	cam.setScale(0.15f);
+	//cam.setScale(3.0f);
 
 	Timer timer;
 
-	Sprite spr("./assets/textures/smile.png", 0.5f);
+	const float size = 256.0f;
+	Sprite spr("./assets/textures/test.png", -400, -300, size, size); // bottom left
+	
+	Sprite spr2("./assets/textures/test.png", 400 - size, -300, size, size); // bottom right
+	Sprite spr3("./assets/textures/test.png", -400, 300 - size, size, size); // top left
+	Sprite spr4("./assets/textures/test.png", 400 - size, 300 - size, size, size); // top right
 
-	//spr.setPosition(-0.5f, 0);
-	spr.setScale(0.35f);
-	//spr.rotate(45.0f, AXIS_Z);
+	Sprite smile("./assets/textures/smile.png", -32, -32, 64, 64);
+
+	smile.setPosition(-32, -150);
+	smile.setScale(3.0f);
+
 	spr.setColor(COLOR_CYAN);
+	spr2.setColor(COLOR_BLUE);
+	spr3.setColor(COLOR_RED);
+	spr4.setColor(COLOR_GREEN);
 
 	while (!disp.isClosed())
 	{
@@ -63,13 +73,15 @@ void run()
 
 		if (Input::buttonPressed(MOUSE_BUTTON_LEFT))
 		{
-			vec2f mCoords = Input::getMousePos();
-			fmt::print("Screen coords: ({}, {})\n", mCoords.x, mCoords.y);
-			mCoords = cam.convertScreenToWorld(mCoords);
-			fmt::print("World coords: ({}, {})\n", mCoords.x, mCoords.y);
+			vec2f coords = Input::getMousePos();
+			fmt::print("Screen coords: ({}, {})\n", coords.x, coords.y);
+			coords = cam.convertScreenToWorld(coords);
+			fmt::print("World coords: ({}, {})\n", coords.x, coords.y);
 		}
 
-		static float movSpd = 5.0f;
+		smile.rotate(delta * 45, AXIS_Z);
+		
+		static float movSpd = 5.0f * delta;
 		if (Input::keyDown(KEY_D))
 		{
 			cam.move({movSpd, 0});
@@ -90,9 +102,23 @@ void run()
 			cam.move({ 0, movSpd });
 		}
 
+		if(Input::keyDown(KEY_E))
+		{
+			cam.setScale(cam.getScale() + delta);
+		}
+
+		if(Input::keyDown(KEY_Q))
+		{
+			cam.setScale(cam.getScale() - delta);
+		}
+
 		basic.bind();
 		basic.setMat4("proj", cam.getTransform());
 		spr.render(basic);
+		spr2.render(basic);
+		spr3.render(basic);
+		spr4.render(basic);
+		smile.render(basic);
 
 		
 
