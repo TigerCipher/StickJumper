@@ -25,11 +25,21 @@
 
 #include "Vertex.h"
 
+//const list<Vertex> G_VERTICES = {
+//	{ { 0.5f, 0.5f }, { 1, 1 } }, // top right 0
+//	{ { 0.5f, -0.5f }, { 1, 0 } }, // bottom right 1
+//	{ { -0.5f, -0.5f }, { 0, 0 } }, // bottom left 2
+//	{ { -0.5f, 0.5f }, { 0, 1 } } // top left 3
+//};
+
+// TODO: Make objects take x1, y1, x2, and y2 coords to fill the vertex data
+// Will make life easier for tracking position - and making camera follow a player
+
 const list<Vertex> G_VERTICES = {
-	{ { 0.5f, 0.5f }, { 1, 1 } }, // top right 0
-	{ { 0.5f, -0.5f }, { 1, 0 } }, // bottom right 1
-	{ { -0.5f, -0.5f }, { 0, 0 } }, // bottom left 2
-	{ { -0.5f, 0.5f }, { 0, 1 } } // top left 3
+	{ { 400, 300 }, { 1, 1 } }, // top right 0
+	{ { 400, -300 }, { 1, 0 } }, // bottom right 1
+	{ { -400, -300 }, { 0, 0 } }, // bottom left 2
+	{ { -400, 300 }, { 0, 1 } } // top left 3
 };
 
 const list<uint> G_INDICES = {
@@ -70,19 +80,15 @@ void Sprite::rotate(const float angle, const Axis axis)
 
 void Sprite::render(const Shader& shader)
 {
-	shader.bind();
-
 	shader.setVec4("colorOverlay", vec4f(mColor.r, mColor.g, mColor.b, mColor.a));
 
 	shader.setInt("tex", mTexture.getId());
 	mTexture.bind();
 
-	shader.setMat4("rotMatrix", mRotTransform);
+	//shader.setMat4("rotMatrix", mRotTransform);
 
 	shader.setMat4("transform", mTransform);
 
 	mMesh.draw();
-
-	shader.unbind();
 	mTexture.unbind();
 }

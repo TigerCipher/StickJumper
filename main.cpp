@@ -34,63 +34,67 @@
 #include "Math.h"
 #include "Sprite.h"
 
+#include "Camera.h"
+
 void run()
 {
 	Display disp("Stick Jumper", 800, 600);
+
 	const Shader basic("./assets/shaders/testVS.glsl", "./assets/shaders/testFS.glsl");
+
+	Camera cam(disp);
+	cam.setScale(0.15f);
 
 	Timer timer;
 
 	Sprite spr("./assets/textures/smile.png", 0.5f);
 
-	spr.setPosition(-0.5f, 0);
+	//spr.setPosition(-0.5f, 0);
 	spr.setScale(0.35f);
-	spr.rotate(45.0f, AXIS_Z);
+	//spr.rotate(45.0f, AXIS_Z);
 	spr.setColor(COLOR_CYAN);
 
 	while (!disp.isClosed())
 	{
 		const float delta = timer.mark();
-		disp.clear(0.2f);
+		Display::clear(0.2f);
 
-		if(Input::buttonPressed(MOUSE_BUTTON_LEFT))
+		cam.update();
+
+		if (Input::buttonPressed(MOUSE_BUTTON_LEFT))
 		{
-			LOG_DEBUG("Display resolution: ({}, {})", disp.getWidth(), disp.getHeight());
+			vec2f mCoords = Input::getMousePos();
+			fmt::print("Screen coords: ({}, {})\n", mCoords.x, mCoords.y);
+			mCoords = cam.convertScreenToWorld(mCoords);
+			fmt::print("World coords: ({}, {})\n", mCoords.x, mCoords.y);
 		}
 
 		static float movSpd = 5.0f;
-		if(Input::keyDown(KEY_D))
+		if (Input::keyDown(KEY_D))
 		{
-			spr.translate(delta * movSpd, 0);
+			cam.move({movSpd, 0});
 		}
 
 		if (Input::keyDown(KEY_A))
 		{
-			spr.translate(delta * -movSpd, 0);
+			cam.move({ -movSpd, 0 });
 		}
 
 		if (Input::keyDown(KEY_S))
 		{
-			spr.translate(0, delta * -movSpd);
+			cam.move({ 0, -movSpd });
 		}
 
 		if (Input::keyDown(KEY_W))
 		{
-			spr.translate(0, delta * movSpd);
-		}
-		static float rotSpd = 125.0f;
-		if(Input::keyDown(KEY_E))
-		{
-			spr.rotate(delta * -rotSpd, AXIS_Z);
+			cam.move({ 0, movSpd });
 		}
 
-		if(Input::keyDown(KEY_Q))
-		{
-			spr.rotate(delta * rotSpd, AXIS_Z);
-		}
-		
+		basic.bind();
+		basic.setMat4("proj", cam.getTransform());
 		spr.render(basic);
 
+		
 
 		Input::update();
 		disp.swap();

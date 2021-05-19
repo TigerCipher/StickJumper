@@ -15,52 +15,59 @@
 // 
 // Contact: team@bluemoondev.org
 // 
-// File Name: Sprite.h
-// Date File Created: 05/18/2021 at 2:25 PM
+// File Name: Camera.h
+// Date File Created: 05/18/2021 at 7:00 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include <string>
-
 #include "Common.h"
-#include "Common.h"
-#include "Texture.h"
-#include "Math.h"
-#include "Shader.h"
-#include "Mesh.h"
-#include "Vertex.h"
+#include "Display.h"
 
-class Sprite
+class Camera
 {
 public:
-	Sprite(const std::string& tex, float scale = 1.0f);
-	~Sprite() = default;
+	Camera(const Display& disp);
 
-	void setScale(float scale);
+	~Camera() = default;
 
-	void setPosition(const vec2f& pos);
-	void setPosition(const float x, const float y) { setPosition({x, y}); }
+	void update();
 
+	vec2f convertScreenToWorld(const vec2f& screenCoords) const;
+
+	void setScale(const float scale)
+	{
+		mScale = scale;
+		mUpdateMatrix = true;
+	}
+
+	void setPosition(const vec2f& pos)
+	{
+		mPosition = pos;
+		mUpdateMatrix = true;
+	}
+
+	void move(const vec2f& offset)
+	{
+		mPosition += offset;
+		mUpdateMatrix = true;
+	}
+
+	float getScale() const { return mScale; }
 	vec2f getPosition() const { return mPosition; }
-
-	void setColor(const ColorRGBA8 col) { mColor = col; }
-
-	void translate(float x, float y);
-	void rotate(float angle, Axis axis);
-
-	void render(const Shader& shader);
+	mat4f getTransform() const { return mTransform; }
+	mat4f getProjection() const { return mProjection; }
 
 private:
-	Texture mTexture;
-	Mesh mMesh;
-	float mScale;
+	int mScreenWidth;
+	int mScreenHeight;
+	bool mUpdateMatrix = true;
 
-	vec2f mPosition {};
-	mat4f mRotTransform { 1 };
-	mat4f mTransform { 1 };
-	ColorRGBA8 mColor{};
-	
+	float mScale = 1;
+
+	vec2f mPosition{};
+	mat4f mProjection{1};
+	mat4f mTransform{1};
 };

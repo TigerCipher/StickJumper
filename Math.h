@@ -24,6 +24,8 @@
 #pragma once
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
 #include "Common.h"
 
 constexpr float PI    = 3.14159265358979323846f;
