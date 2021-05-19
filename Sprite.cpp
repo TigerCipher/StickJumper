@@ -69,13 +69,18 @@ void Sprite::rotate(const float angle, const Axis axis)
 
 void Sprite::render(const Shader& shader)
 {
+	static Texture over("./assets/textures/01.png");
 	shader.setVec4("colorOverlay", vec4f(mColor.r, mColor.g, mColor.b, mColor.a));
 
-	shader.setInt("tex", mTexture.getId());
-	mTexture.bind();
+	//shader.setInt("tex", mTexture.getId());
+	shader.setInt("tex", 0);
+	shader.setInt("overlay", 1);
+	mTexture.bind(0);
+	over.bind(1);
 
 	shader.setMat4("transform", mTransform);
 
 	mMesh->draw();
-	mTexture.unbind();
+	mTexture.unbind(0);
+	over.unbind(1);
 }

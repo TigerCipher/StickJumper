@@ -36,6 +36,11 @@
 
 #include "Camera.h"
 
+void testing_texture_limit(const Texture& tex)
+{
+	uint id = tex.getId();
+}
+
 void run()
 {
 	Display disp("Stick Jumper", 800, 600);
@@ -54,8 +59,12 @@ void run()
 	Sprite spr3("./assets/textures/test.png", -400, 300 - size, size, size); // top left
 	Sprite spr4("./assets/textures/test.png", 400 - size, 300 - size, size, size); // top right
 
-	Sprite smile("./assets/textures/smile.png", -32, -32, 64, 64);
 
+	Sprite m1("./assets/textures/01.png", -32, -32, 64, 64);
+
+	
+	Sprite smile("./assets/textures/smile.png", -32, -32, 64, 64);
+	
 	smile.setPosition(-32, -150);
 	smile.setScale(3.0f);
 

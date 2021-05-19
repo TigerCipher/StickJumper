@@ -9,13 +9,14 @@ out vec4 fragColor;
 //uniform float cosTime;
 
 uniform sampler2D tex;
+uniform sampler2D overlay;
 //uniform sampler2D smileTex;
 uniform vec4 colorOverlay;
 
 void main()
 {
-	//vec4 texColor = mix(texture(tex, fragTex), texture(smileTex, fragTex), 0.4);
-	vec4 texColor = texture(tex, fragTex);
+	vec4 texColor = mix(texture(tex, fragTex), texture(overlay, fragTex), 0.2);
+	//vec4 texColor = texture(tex, fragTex);
 	
 	vec4 col = colorOverlay;
 	if(col == vec4(0))

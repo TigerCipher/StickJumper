@@ -31,7 +31,6 @@
 
 std::unordered_map<std::string, TextureData> Texture::sTextureCache;
 
-
 Texture::Texture(const std::string& filePath)
 {
 	auto it = sTextureCache.find(filePath);
@@ -58,24 +57,19 @@ Texture::~Texture()
 }
 
 
-void Texture::bind(uint slot)
+void Texture::bind(const uint slot)
 {
-	if(slot == 99)
+	if(!mBound)
 	{
-		slot = mData.id;
+		assert(slot < 31 && slot >= 0);
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, mData.id);
+		mBound = true;
 	}
-	assert(slot < 31 && slot >= 0);
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, mData.id);
-	mBound = true;
 }
 
-void Texture::unbind(uint slot)
+void Texture::unbind(const uint slot)
 {
-	if (slot == 99)
-	{
-		slot = mData.id;
-	}
 	assert(slot < 31 && slot >= 0);
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, 0);

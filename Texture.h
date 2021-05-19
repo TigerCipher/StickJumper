@@ -25,7 +25,6 @@
 
 #include "Common.h"
 
-#include <map>
 #include <string>
 
 struct TextureData
@@ -41,8 +40,8 @@ public:
 	Texture(const std::string& filePath);
 	~Texture();
 
-	void bind(uint slot = 99);
-	void unbind(uint slot = 99);
+	void bind(uint slot = 0);
+	void unbind(uint slot = 0);
 
 	uint getId() const { return mData.id; }
 
