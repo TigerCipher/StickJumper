@@ -33,7 +33,11 @@ public:
 	float peek() const;
 	float elapsed() const;
 
+	static float now();
 private:
+
+	static std::chrono::steady_clock::time_point mEpoch;
+	
 	std::chrono::steady_clock::time_point mLast;
 	std::chrono::steady_clock::time_point mStart;
 };

@@ -37,25 +37,7 @@
 #include "Camera.h"
 
 
-void calculate_fps(Timer& timer, float& fps)
-{
-	static float avgFps = 0;
-	static int frameCount = 0;
-
-	frameCount++;
-	avgFps += fps;
-
-	if(timer.peek() >= 1.0f)
-	{
-		avgFps /= static_cast<float>(frameCount);
-		timer.mark();
-		// TODO: Is the avg fps even accurate?
-		//fmt::print("Avg FPS: {:.2f}\t{:.3f} ms/frame\t{} fps\n", avgFps, 1000.0f / avgFps, frameCount);
-		fmt::print("{} fps\t{:.3f} ms/frame\n", frameCount, 1000.0f / frameCount);
-		avgFps = 0;
-		frameCount = 0;
-	}
-}
+bool gLimitFramerate = false;
 
 void run()
 {
@@ -90,71 +72,101 @@ void run()
 	spr3.setColor(COLOR_RED);
 	spr4.setColor(COLOR_GREEN);
 
-	Timer perfTimer;
+
+	float lastTime     = Timer::now();
+	float frameCounter = 0;
+	float accumulated  = 0;
+	int fps            = 0;
+
+	float frameTime = 1.0f / 120.0f;
 
 	while (!disp.isClosed())
 	{
-		float fps = 1.0f / timer.peek();
-		const float delta = timer.mark();
+		bool allowRender = false;
+		float startTime  = Timer::now();
+		float passedTime = startTime - lastTime;
+		lastTime         = startTime;
 
+		accumulated += passedTime;
+		frameCounter += passedTime;
 
-		Display::clear(0.2f);
-
-		cam.update();
-
-		if (Input::buttonPressed(MOUSE_BUTTON_LEFT))
+		//const float delta2 = timer.mark();
+		if (frameCounter >= 1.0f)
 		{
-			vec2f coords = Input::getMousePos();
-			fmt::print("Screen coords: ({}, {})\n", coords.x, coords.y);
-			coords = cam.convertScreenToWorld(coords);
-			fmt::print("World coords: ({}, {})\n", coords.x, coords.y);
+			fmt::print("FPS: {}\n", fps);
+			fps          = 0;
+			frameCounter = 0;
 		}
 
-		smile.rotate(delta * 45, AXIS_Z);
-
-		static float movSpd = 5.0f * delta;
-		if (Input::keyDown(KEY_D))
+		while (accumulated > frameTime)
 		{
-			cam.move({ movSpd, 0 });
+			allowRender       = true;
+			const float delta = frameTime;
+
+			cam.update();
+
+			if (Input::buttonPressed(MOUSE_BUTTON_LEFT))
+			{
+				vec2f coords = Input::getMousePos();
+				fmt::print("Screen coords: ({}, {})\n", coords.x, coords.y);
+				coords = cam.convertScreenToWorld(coords);
+				fmt::print("World coords: ({}, {})\n", coords.x, coords.y);
+			}
+
+			smile.rotate(delta * 45, AXIS_Z);
+
+			static float movSpd = 500.0f * delta;
+			//static float movSpd = 10.0f;
+			if (Input::keyDown(KEY_D))
+			{
+				cam.move({ movSpd, 0 });
+			}
+
+			if (Input::keyDown(KEY_A))
+			{
+				cam.move({ -movSpd, 0 });
+			}
+
+			if (Input::keyDown(KEY_S))
+			{
+				cam.move({ 0, -movSpd });
+			}
+
+			if (Input::keyDown(KEY_W))
+			{
+				cam.move({ 0, movSpd });
+			}
+
+			if (Input::keyDown(KEY_E))
+			{
+				cam.setScale(cam.getScale() + delta);
+			}
+
+			if (Input::keyDown(KEY_Q))
+			{
+				cam.setScale(cam.getScale() - delta);
+			}
+
+			Input::update();
+
+			accumulated -= frameTime;
 		}
 
-		if (Input::keyDown(KEY_A))
+
+		// Render code
+		if (!gLimitFramerate || allowRender)
 		{
-			cam.move({ -movSpd, 0 });
+			Display::clear(0.2f);
+			basic.bind();
+			basic.setMat4("proj", cam.getTransform());
+			spr.render(basic);
+			spr2.render(basic);
+			spr3.render(basic);
+			spr4.render(basic);
+			smile.render(basic);
+			disp.swap();
+			fps++;
 		}
-
-		if (Input::keyDown(KEY_S))
-		{
-			cam.move({ 0, -movSpd });
-		}
-
-		if (Input::keyDown(KEY_W))
-		{
-			cam.move({ 0, movSpd });
-		}
-
-		if (Input::keyDown(KEY_E))
-		{
-			cam.setScale(cam.getScale() + delta);
-		}
-
-		if (Input::keyDown(KEY_Q))
-		{
-			cam.setScale(cam.getScale() - delta);
-		}
-
-		basic.bind();
-		basic.setMat4("proj", cam.getTransform());
-		spr.render(basic);
-		spr2.render(basic);
-		spr3.render(basic);
-		spr4.render(basic);
-		smile.render(basic);
-
-
-		Input::update();
-		disp.swap();
-		calculate_fps(perfTimer, fps);
 	}
 }
 

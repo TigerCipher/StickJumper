@@ -23,6 +23,7 @@
 
 #include "Timer.h"
 
+std::chrono::steady_clock::time_point Timer::mEpoch = std::chrono::high_resolution_clock::now();
 
 float Timer::mark()
 {
@@ -40,5 +41,10 @@ float Timer::peek() const
 float Timer::elapsed() const
 {
 	return std::chrono::duration<float>(std::chrono::steady_clock::now() - mStart).count();
+}
+
+float Timer::now()
+{
+	return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - mEpoch).count() / 1000000000.0f;
 }
 
