@@ -36,9 +36,25 @@
 
 #include "Camera.h"
 
-void testing_texture_limit(const Texture& tex)
+
+void calculate_fps(Timer& timer, float& fps)
 {
-	uint id = tex.getId();
+	static float avgFps = 0;
+	static int frameCount = 0;
+
+	frameCount++;
+	avgFps += fps;
+
+	if(timer.peek() >= 1.0f)
+	{
+		avgFps /= static_cast<float>(frameCount);
+		timer.mark();
+		// TODO: Is the avg fps even accurate?
+		//fmt::print("Avg FPS: {:.2f}\t{:.3f} ms/frame\t{} fps\n", avgFps, 1000.0f / avgFps, frameCount);
+		fmt::print("{} fps\t{:.3f} ms/frame\n", frameCount, 1000.0f / frameCount);
+		avgFps = 0;
+		frameCount = 0;
+	}
 }
 
 void run()
@@ -54,7 +70,7 @@ void run()
 
 	const float size = 256.0f;
 	Sprite spr("./assets/textures/test.png", -400, -300, size, size); // bottom left
-	
+
 	Sprite spr2("./assets/textures/test.png", 400 - size, -300, size, size); // bottom right
 	Sprite spr3("./assets/textures/test.png", -400, 300 - size, size, size); // top left
 	Sprite spr4("./assets/textures/test.png", 400 - size, 300 - size, size, size); // top right
@@ -62,9 +78,10 @@ void run()
 
 	Sprite m1("./assets/textures/01.png", -32, -32, 64, 64);
 
-	
+
 	Sprite smile("./assets/textures/smile.png", -32, -32, 64, 64);
-	
+
+
 	smile.setPosition(-32, -150);
 	smile.setScale(3.0f);
 
@@ -73,9 +90,14 @@ void run()
 	spr3.setColor(COLOR_RED);
 	spr4.setColor(COLOR_GREEN);
 
+	Timer perfTimer;
+
 	while (!disp.isClosed())
 	{
+		float fps = 1.0f / timer.peek();
 		const float delta = timer.mark();
+
+
 		Display::clear(0.2f);
 
 		cam.update();
@@ -89,11 +111,11 @@ void run()
 		}
 
 		smile.rotate(delta * 45, AXIS_Z);
-		
+
 		static float movSpd = 5.0f * delta;
 		if (Input::keyDown(KEY_D))
 		{
-			cam.move({movSpd, 0});
+			cam.move({ movSpd, 0 });
 		}
 
 		if (Input::keyDown(KEY_A))
@@ -111,12 +133,12 @@ void run()
 			cam.move({ 0, movSpd });
 		}
 
-		if(Input::keyDown(KEY_E))
+		if (Input::keyDown(KEY_E))
 		{
 			cam.setScale(cam.getScale() + delta);
 		}
 
-		if(Input::keyDown(KEY_Q))
+		if (Input::keyDown(KEY_Q))
 		{
 			cam.setScale(cam.getScale() - delta);
 		}
@@ -129,10 +151,10 @@ void run()
 		spr4.render(basic);
 		smile.render(basic);
 
-		
 
 		Input::update();
 		disp.swap();
+		calculate_fps(perfTimer, fps);
 	}
 }
 

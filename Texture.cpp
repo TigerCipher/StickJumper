@@ -33,11 +33,8 @@ std::unordered_map<std::string, TextureData> Texture::sTextureCache;
 
 Texture::Texture(const std::string& filePath)
 {
-	auto it = sTextureCache.find(filePath);
-
-	if (it == sTextureCache.end())
+	if (const auto it = sTextureCache.find(filePath); it == sTextureCache.end())
 	{
-		// Load
 		mData = load(filePath);
 		sTextureCache.insert(std::make_pair(filePath, mData));
 	}

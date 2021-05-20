@@ -77,6 +77,6 @@ void Mesh::bind() const
 void Mesh::draw() const
 {
 	glBindVertexArray(mVao);
-	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, static_cast<int>(mIndices.size()), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }

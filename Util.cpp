@@ -32,9 +32,7 @@ bool read_file(const std::string& path, std::string& contents)
 
 	auto stream = std::ifstream(path.data());
 
-	const std::filesystem::path f(path);
-
-	if (!std::filesystem::exists(f))
+	if (const std::filesystem::path f(path); !exists(f))
 	{
 		return false;
 	}

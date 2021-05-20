@@ -41,3 +41,4 @@ float Timer::elapsed() const
 {
 	return std::chrono::duration<float>(std::chrono::steady_clock::now() - mStart).count();
 }
+
