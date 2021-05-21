@@ -64,6 +64,7 @@ void window_resize_callback(GLFWwindow* window, int width, int height)
 	auto disp = static_cast<Display*>(glfwGetWindowUserPointer(window));
 	disp->setWidth(width);
 	disp->setHeight(height);
+	//TODO: Resize camera ortho projection?
 }
 
 // END GLFW Callbacks
@@ -163,6 +164,12 @@ void Display::clear(const float red, const float green, const float blue)
 bool Display::isClosed() const
 {
 	return glfwWindowShouldClose(mWindow);
+}
+
+void Display::setTitle(const std::string& title)
+{
+	mTitle = title;
+	glfwSetWindowTitle(mWindow, mTitle.c_str());
 }
 
 vec2f Display::getCenter() const

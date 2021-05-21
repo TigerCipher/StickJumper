@@ -39,6 +39,9 @@ public:
 
 	bool isClosed() const;
 
+	std::string getTitle() const { return mTitle; }
+	void setTitle(const std::string& title);
+
 	int getWidth() const { return mWidth; }
 	int getHeight() const { return mHeight; }
 

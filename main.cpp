@@ -78,7 +78,7 @@ void run()
 	float accumulated  = 0;
 	int fps            = 0;
 
-	float frameTime = 1.0f / 120.0f;
+	float frameTime = 1.0f / 144.0f;
 
 	while (!disp.isClosed())
 	{
@@ -94,6 +94,7 @@ void run()
 		if (frameCounter >= 1.0f)
 		{
 			fmt::print("FPS: {}\n", fps);
+			disp.setTitle(fmt::format("Stick Jumper    -    {} FPS", fps));
 			fps          = 0;
 			frameCounter = 0;
 		}
