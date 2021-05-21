@@ -36,6 +36,8 @@
 
 #include "Camera.h"
 
+#include "Game.h"
+
 
 bool gLimitFramerate = false;
 
@@ -80,6 +82,8 @@ void run()
 
 	float frameTime = 1.0f / 144.0f;
 
+	Game game(disp);
+
 	while (!disp.isClosed())
 	{
 		bool allowRender = false;
@@ -104,49 +108,7 @@ void run()
 			allowRender       = true;
 			const float delta = frameTime;
 
-			cam.update();
-
-			if (Input::buttonPressed(MOUSE_BUTTON_LEFT))
-			{
-				vec2f coords = Input::getMousePos();
-				fmt::print("Screen coords: ({}, {})\n", coords.x, coords.y);
-				coords = cam.convertScreenToWorld(coords);
-				fmt::print("World coords: ({}, {})\n", coords.x, coords.y);
-			}
-
-			smile.rotate(delta * 45, AXIS_Z);
-
-			static float movSpd = 500.0f * delta;
-			//static float movSpd = 10.0f;
-			if (Input::keyDown(KEY_D))
-			{
-				cam.move({ movSpd, 0 });
-			}
-
-			if (Input::keyDown(KEY_A))
-			{
-				cam.move({ -movSpd, 0 });
-			}
-
-			if (Input::keyDown(KEY_S))
-			{
-				cam.move({ 0, -movSpd });
-			}
-
-			if (Input::keyDown(KEY_W))
-			{
-				cam.move({ 0, movSpd });
-			}
-
-			if (Input::keyDown(KEY_E))
-			{
-				cam.setScale(cam.getScale() + delta);
-			}
-
-			if (Input::keyDown(KEY_Q))
-			{
-				cam.setScale(cam.getScale() - delta);
-			}
+			game.update(delta);
 
 			Input::update();
 
@@ -158,13 +120,9 @@ void run()
 		if (!gLimitFramerate || allowRender)
 		{
 			Display::clear(0.2f);
-			basic.bind();
-			basic.setMat4("proj", cam.getTransform());
-			spr.render(basic);
-			spr2.render(basic);
-			spr3.render(basic);
-			spr4.render(basic);
-			smile.render(basic);
+
+			game.render();
+			
 			disp.swap();
 			fps++;
 		}
