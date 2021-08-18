@@ -90,8 +90,8 @@ void Game::render()
 	mBasicShader.bind();
 	mBasicShader.setMat4("proj", mCamera.getTransform());
 
-	for(int i = 0; i < mSprites.size(); i++)
+	for (auto& sprite : mSprites)
 	{
-		mSprites[i]->render(mBasicShader);
+		sprite->render(mBasicShader);
 	}
 }
